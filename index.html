@@ -252,7 +252,7 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">24</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">25</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -270,7 +270,7 @@ nav a.on svg{stroke-width:2.1}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='24';
+const VER='25';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -349,7 +349,10 @@ function render(){
   document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===VIEW));
   const v={inicio:vInicio,cursos:vCursos,evaluaciones:vEvaluaciones,consolidado:vConsolidado,alumno:vAlumno,adaptaciones:vAdaptaciones,datos:vDatos};
   const y=window.scrollY;
-  document.getElementById('app').innerHTML=v[VIEW]?v[VIEW]():'';
+  let html='';
+  try{html=v[VIEW]?v[VIEW]():''}
+  catch(err){html=`<div class="card"><h2>No se pudo abrir esta sección</h2><div class="hint">${(err&&err.message)||err}</div><button type="button" class="cta" id="goIni" style="margin-top:12px"><span class="ico">🏠</span>Volver al inicio<span class="arrow">›</span></button></div>`}
+  document.getElementById('app').innerHTML=html;
   if(VIEW!==LASTVIEW){window.scrollTo(0,0);LASTVIEW=VIEW}else{window.scrollTo(0,y)}
   bind();
 }
@@ -524,6 +527,7 @@ function refrescar(){
 
 function vAlumno(){
   const c=curso();
+  if(!c.alumnos.length)return `<div class="card"><h2>${c.n} no tiene estudiantes</h2><div class="hint">Agrégalos en la pestaña Cursos y vuelve aquí.</div><button type="button" class="cta" id="goCur" style="margin-top:12px"><span class="ico">👥</span>Ir a Cursos<span class="arrow">›</span></button></div>`;
   if(!c.alumnos.find(a=>a.id===DB.alumno))DB.alumno=c.alumnos[0].id;
   const a=c.alumnos.find(x=>x.id===DB.alumno);
   let h=`<div class="card"><h2>Estudiante</h2><select id="selAlu">${c.alumnos.map((x,i)=>`<option value="${x.id}" ${x.id===a.id?'selected':''}>${i+1}. ${x.n}</option>`).join('')}</select></div>`;
@@ -570,6 +574,7 @@ function mejora(t,ant,act){
 
 function vConsolidado(){
   const c=curso(), t=testAct(), fs=fechasDe(t);
+  if(!c.alumnos.length)return `<div class="card"><h2>${c.n} no tiene estudiantes</h2><div class="hint">Agrégalos en la pestaña Cursos para poder comparar evaluaciones.</div><button type="button" class="cta" id="goCur" style="margin-top:12px"><span class="ico">👥</span>Ir a Cursos<span class="arrow">›</span></button></div>`;
   let h=`<div class="card top">
     <div class="thead"><div class="tround">${icoSVG(t.id)}</div>
       <div class="txt"><h1 class="titulo" style="font-size:22px">${t.n}</h1>
@@ -935,6 +940,7 @@ function bind(){
   if($('irAlumno'))$('irAlumno').addEventListener('click',()=>{VIEW='alumno';render()});
   const ir={goEval:'evaluaciones',goCon:'consolidado',goAlu:'alumno',goCur:'cursos',goAda:'adaptaciones',goDat:'datos'};
   Object.keys(ir).forEach(k=>{if($(k))$(k).addEventListener('click',()=>{VIEW=ir[k];render()})});
+  if($('goIni'))$('goIni').addEventListener('click',()=>{VIEW='inicio';render()});
   if($('selCurso'))$('selCurso').addEventListener('change',e=>{DB.activo=e.target.value;save();render()});
   if($('addAlu')){$('addAlu').addEventListener('click',()=>{const n=$('nuevoAlu').value.trim();if(!n)return;curso().alumnos.push({id:uid(),n:n.toUpperCase()});save();render();toast('Estudiante agregado')})}
   document.querySelectorAll('[id^="verA"]').forEach(b=>b.addEventListener('click',()=>{DB.alumno=b.id.slice(4);save();VIEW='alumno';render()}));
