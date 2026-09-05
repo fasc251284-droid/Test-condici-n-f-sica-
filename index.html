@@ -21,14 +21,7 @@
 html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt);
   font-size:15px;line-height:1.4;padding-bottom:calc(78px + env(safe-area-inset-bottom));}
-header{background:linear-gradient(180deg,var(--azul) 0%,var(--azul2) 100%);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
-  position:sticky;top:0;z-index:50;border-bottom:3px solid var(--oro);}
-header .kicker{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:#f6e2ad;font-weight:700}
-header h1{margin:2px 0 0;font-size:18px;font-weight:700;letter-spacing:-.01em}
-header .sub{font-size:12px;color:#c3d2ee;margin-top:2px}
 main{padding:14px 14px 20px;max-width:820px;margin:0 auto;overflow-x:hidden}
-.card{background:var(--card);border:1px solid var(--linea);border-radius:var(--r);padding:14px;margin-bottom:12px;max-width:100%;overflow:hidden}
-.card h2{margin:0 0 10px;font-size:15px;font-weight:700;overflow-wrap:anywhere}
 .card h3{margin:8px 0 6px;font-size:13px;font-weight:700;color:var(--azul)}
 label.f{display:block;font-size:12px;font-weight:600;color:var(--txt2);margin:0 0 4px}
 select,input[type=text],input[type=date],textarea{width:100%;max-width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid var(--linea);border-radius:10px;
@@ -82,6 +75,79 @@ tbody tr:nth-child(even) td{background:#fafbfe}
 .asistencia button{width:32px;padding:6px 0;font-size:10px;margin:0;border:1px solid var(--linea);background:#fafbfc;color:var(--txt2);font-weight:700}
 .asistencia button.on-P,.asistencia button.on-A,.asistencia button.on-J{background:var(--azul);color:#fff;border-color:var(--azul)}
 #printarea{display:none}
+
+/* ===== Encabezado ===== */
+header{background:linear-gradient(180deg,#0f2b5b 0%,#17417f 100%);color:#fff;
+  padding:calc(10px + env(safe-area-inset-top)) 14px 12px;position:sticky;top:0;z-index:50;
+  border-bottom:3px solid var(--oro)}
+.hrow{display:flex;align-items:center;gap:9px}
+.logo{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#fff;color:var(--azul);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:-.03em}
+.logo span{font-size:9px;margin-left:1px;color:var(--oro)}
+.pill{width:auto!important;flex:0 0 auto;margin:0!important;display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);color:#fff;
+  padding:8px 13px!important;border-radius:999px;font-size:14px;font-weight:700;letter-spacing:.01em}
+.pill .chev{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.autosave{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#cfdcf5}
+.autosave i{width:7px;height:7px;border-radius:50%;background:#5fd39a;flex:0 0 7px}
+.autosave.off i{background:#e5a13c}
+.hsub{margin-top:8px;font-size:11px;color:#a9bde2;font-weight:500}
+.pillsel{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+
+/* ===== Tarjetas ===== */
+.card{background:var(--card);border:1px solid #e6eaf2;border-radius:20px;padding:18px;
+  margin-bottom:12px;max-width:100%;overflow:hidden}
+.card h2{margin:0 0 12px;font-size:16px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere}
+
+/* Cabecera del test */
+.chip{display:inline-flex;align-items:center;gap:7px;background:#e6f6ee;color:#12855a;
+  padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;margin-bottom:12px}
+.chip i{width:8px;height:8px;border-radius:50%;background:#19a86f;flex:0 0 8px}
+.titulo{font-size:27px;font-weight:800;letter-spacing:-.025em;line-height:1.1;margin:0 0 7px}
+.meta{font-size:13.5px;color:var(--txt2);margin-bottom:12px}
+.codigo{display:inline-block;border:1px solid #cfe0f5;color:var(--azul2);background:#f2f7fe;
+  padding:6px 12px;border-radius:9px;font-size:12.5px;font-weight:700;letter-spacing:.04em;margin-bottom:12px}
+.fecharow{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:#f5f7fb;border-radius:12px;padding:6px 8px 6px 14px}
+.fecharow label{font-size:13.5px;font-weight:700;color:var(--txt);margin:0}
+.fecharow input{width:auto!important;flex:1;margin:0!important;border:0;background:transparent;
+  text-align:center;font-weight:700;font-size:15px;padding:8px 4px}
+
+/* ===== Metricas ===== */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.mcard{border-radius:16px;padding:13px 14px}
+.mcard .lab{font-size:12.5px;font-weight:700;margin-bottom:3px}
+.mcard .val{font-size:29px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.m-az{background:#eaf2fd}.m-az .lab{color:#3d6ba8}.m-az .val{color:#1355a8}
+.m-vd{background:#e8f6ee}.m-vd .lab{color:#3d8a67}.m-vd .val{color:#12855a}
+.m-mo{background:#f1ecfb}.m-mo .lab{color:#6d5aa4}.m-mo .val{color:#6b3fc4}
+.m-na{background:#fdeee4}.m-na .lab{color:#a9673c}.m-na .val{color:#d4622a}
+
+/* ===== Botones de accion ===== */
+.cta{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:linear-gradient(180deg,#1559ad 0%,#0f2b5b 100%);color:#fff;
+  border-radius:16px;padding:14px 16px!important;font-size:15.5px;font-weight:700;margin-bottom:9px}
+.cta .ico{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.cta .arrow{margin-left:auto;font-size:17px;opacity:.85}
+.fila{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;
+  border:1px solid #e6eaf2;color:var(--txt);border-radius:16px;padding:12px 14px!important;
+  font-size:14.5px;font-weight:700;margin-bottom:9px}
+.fila .ico{width:32px;height:32px;flex:0 0 32px;border-radius:10px;background:#f2f7fe;
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.fila .arrow{margin-left:auto;color:var(--txt2);font-size:16px}
+
+/* ===== Navegacion inferior ===== */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.97);
+  backdrop-filter:saturate(180%) blur(12px);border-top:1px solid #e6eaf2;display:flex;
+  padding:7px 2px calc(7px + env(safe-area-inset-bottom))}
+nav a{flex:1;text-align:center;padding:3px 1px;font-size:10.5px;font-weight:600;color:#8b96ab;
+  text-decoration:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav a svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+nav a.on{color:var(--azul2)}
+nav a.on svg{stroke-width:2.1}
+
 @media print{
   body>header,body>nav,body>main,body>.toast{display:none!important}
   #printarea{display:block!important;padding:0;font-size:11pt;color:#000}
@@ -108,39 +174,40 @@ tbody tr:nth-child(even) td{background:#fafbfe}
 .delta.up{color:var(--ok)}
 .delta.down{color:var(--baj)}
 .delta.eq{color:var(--txt2)}
-nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.97);
-  backdrop-filter:saturate(180%) blur(12px);border-top:1px solid var(--linea);display:flex;
-  padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
-nav a{flex:1;text-align:center;padding:5px 2px;font-size:10px;font-weight:600;color:var(--txt2);
   text-decoration:none;cursor:pointer}
-nav a .ic{display:block;font-size:19px;line-height:1.35}
-nav a.on{color:var(--azul)}
 @media print{body{padding:0;background:#fff}header,nav{display:none!important}}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="kicker">Colegio Juan Pablo Segundo · Los Lagos</div>
-  <h1>Test de Condición Física</h1>
-  <div class="sub">5º a 8º Básico · 2026 · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">14</span></div>
+  <div class="hrow">
+    <div class="logo">JP<span>II</span></div>
+    <button type="button" class="pill" id="pillCurso">
+      <span id="pillTxt">5º Básico</span>
+      <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="autosave"><i></i>Guardado automático</div>
+  </div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">16</span></div>
+  <select id="pillSel" class="pillsel"></select>
 </header>
 
 <main id="app"></main>
 
 <nav>
-  <a data-v="cursos"><span class="ic">👥</span>Cursos</a>
-  <a data-v="evaluaciones"><span class="ic">📝</span>Evaluaciones</a>
-  <a data-v="alumno"><span class="ic">🏃</span>Alumno</a>
-  <a data-v="adaptaciones"><span class="ic">⚙️</span>Adaptaciones</a>
-  <a data-v="datos"><span class="ic">☁️</span>Datos</a>
+  <a data-v="cursos"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 6.5a3 3 0 010 5.6"/><path d="M18 14.5c2 .7 3.2 2.3 3.2 4.5"/></svg>Cursos</a>
+  <a data-v="evaluaciones"><svg viewBox="0 0 24 24"><path d="M5 4h9l5 5v11a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M14 4v5h5"/><path d="M8 13h8M8 17h5"/></svg>Evaluaciones</a>
+  <a data-v="alumno"><svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.6"/><path d="M12 9v6"/><path d="M8 11l4-2 4 2"/><path d="M9 21l3-6 3 6"/></svg>Alumno</a>
+  <a data-v="adaptaciones"><svg viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2.2"/><circle cx="10" cy="16" r="2.2"/></svg>Adaptaciones</a>
+  <a data-v="datos"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v11c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-11"/><path d="M5 12c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8"/></svg>Datos</a>
 </nav>
 
 <div id="printarea"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='14';
+const VER='16';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -233,13 +300,54 @@ function vCursos(){
   return h;
 }
 
+function metricas(){
+  const t=testAct(),f=fechaAct(),c=curso();
+  const ev=(t.evals||[]).filter(e=>e.fecha===f);
+  let pres=0,aus=0,just=0,con=0,suma=0,logr=0;
+  c.alumnos.forEach(a=>{
+    const e=ev.find(x=>x.aid===a.id);
+    if(!e)return;
+    if(e.asist==='P')pres++;else if(e.asist==='A')aus++;else if(e.asist==='J')just++;
+    if(e.val){con++;
+      if(t.tipo==='logro'){if(e.val==='L')logr++}
+      else{const n=num((e.val+'').replace(',','.'));if(n!==null&&!isNaN(n))suma+=n}
+    }
+  });
+  return {pres,aus,just,con,total:c.alumnos.length,
+          prom:(t.tipo!=='logro'&&con)?(suma/con):null,
+          logro:(t.tipo==='logro'&&con)?Math.round(logr/con*100):null};
+}
+
 function vEvaluaciones(){
-  const c=curso();
-  if(!c.alumnos.length)return `<div class="card"><div style="text-align:center;color:var(--txt2);padding:20px">Agrega estudiantes primero</div></div>`;
-  let h=`<div class="card"><h2>Registrar evaluación</h2><label class="f">Test</label><div class="testgrp">${DB.tests.map(t=>`<button type="button" class="tbtn ${t.id===TESTSEL?'sel':''}" data-t="${t.id}">${t.ico} ${t.n}</button>`).join('')}</div><div id="extra">${extraHTML()}</div><label class="f">Fecha</label><input type="date" id="evalFecha" value="${hoy()}"></div>`;
+  const c=curso(),t=testAct(),m=metricas();
+  if(!c.alumnos.length)return `<div class="card"><h2>Sin estudiantes</h2><div class="hint">Agrega estudiantes en la pestaña Cursos para empezar a registrar.</div></div>`;
+  const tercera = t.tipo==='logro'
+    ? `<div class="mcard m-mo"><div class="lab">Logro</div><div class="val">${m.logro===null?'—':m.logro+'%'}</div></div>`
+    : `<div class="mcard m-mo"><div class="lab">Promedio</div><div class="val">${m.prom===null?'—':fmt(m.prom,1).replace('.',',')}</div></div>`;
+
+  let h=`<div class="card">
+    <div class="chip"><i></i>En evaluación</div>
+    <h1 class="titulo">${t.n}</h1>
+    <div class="meta">${c.alumnos.length} estudiantes${t.u?' · resultado en '+t.u:''}${t.tipo==='logro'?' · logrado o no logrado':''}</div>
+    <div class="codigo">${t.ico} ${t.id.toUpperCase()} · 2026</div>
+    <div id="extra">${extraHTML()}</div>
+    <div class="fecharow"><label for="evalFecha">Fecha</label><input type="date" id="evalFecha" value="${hoy()}"></div>
+  </div>`;
+
+  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${x.ico} ${x.n}</button>`).join('')}</div></div>`;
+
+  h+=`<div class="mgrid" id="mgrid">
+    <div class="mcard m-az"><div class="lab">Registrados</div><div class="val">${m.con}/${m.total}</div></div>
+    <div class="mcard m-vd"><div class="lab">Presentes</div><div class="val">${m.pres}</div></div>
+    ${tercera}
+    <div class="mcard m-na"><div class="lab">Ausentes</div><div class="val">${m.aus}</div></div>
+  </div>`;
+
   h+=`<div class="card"><h2>Estudiantes</h2><div id="filas">${filasHTML()}</div>`;
-  h+=`<div class="hint" id="pista">${pistaHTML()}</div>`;
-  h+=`<button type="button" class="oro" id="pdfCurso">📄 Informe PDF del curso</button></div>`;
+  h+=`<div class="hint" id="pista">${pistaHTML()}</div></div>`;
+
+  h+=`<button type="button" class="cta" id="pdfCurso"><span class="ico">📄</span>Informe del curso<span class="arrow">›</span></button>`;
+  h+=`<button type="button" class="fila" id="irAlumno"><span class="ico">🏃</span>Informe por estudiante<span class="arrow">›</span></button>`;
   return h;
 }
 
@@ -274,9 +382,22 @@ function filasHTML(){
   return h;
 }
 
+function pintarMetricas(){
+  const g=document.getElementById('mgrid');if(!g)return;
+  const t=testAct(),m=metricas();
+  const tercera=t.tipo==='logro'
+    ?`<div class="mcard m-mo"><div class="lab">Logro</div><div class="val">${m.logro===null?'—':m.logro+'%'}</div></div>`
+    :`<div class="mcard m-mo"><div class="lab">Promedio</div><div class="val">${m.prom===null?'—':fmt(m.prom,1).replace('.',',')}</div></div>`;
+  g.innerHTML=`<div class="mcard m-az"><div class="lab">Registrados</div><div class="val">${m.con}/${m.total}</div></div>`
+    +`<div class="mcard m-vd"><div class="lab">Presentes</div><div class="val">${m.pres}</div></div>`
+    +tercera
+    +`<div class="mcard m-na"><div class="lab">Ausentes</div><div class="val">${m.aus}</div></div>`;
+}
+
 function refrescar(){
   const fx=document.getElementById('filas');if(!fx)return;
   fx.innerHTML=filasHTML();
+  pintarMetricas();
   const ex=document.getElementById('extra');if(ex)ex.innerHTML=extraHTML();
   const pi=document.getElementById('pista');if(pi)pi.innerHTML=pistaHTML();
   bindFilas();
@@ -301,7 +422,7 @@ function vAlumno(){
     });
     h+=`</tbody></table></div>`;
   });
-  h+=`<button type="button" class="oro" id="pdfAlumno" style="margin-top:10px">📄 Informe PDF del estudiante</button>`;
+  h+=`<button type="button" class="cta" id="pdfAlumno" style="margin-top:12px"><span class="ico">📄</span>Informe del estudiante<span class="arrow">›</span></button>`;
   h+=`</div>`;
   return h;
 }
@@ -325,15 +446,22 @@ function vAdaptaciones(){
 
 /* ---------- Sincronizacion con Supabase ---------- */
 const SKEY='cjp2_tcf_sync';
-let SY={url:'',key:''};
-try{SY=JSON.parse(localStorage.getItem(SKEY))||SY}catch(e){}
+const SY_POR_DEFECTO={url:'https://oktinlfoxjdohjukhwqw.supabase.co',key:'sb_publishable_xcSV6janC_6H0PqWcMvrAg_lyCU6cj1'};
+let SY=Object.assign({},SY_POR_DEFECTO);
+try{const g=JSON.parse(localStorage.getItem(SKEY));if(g&&g.url&&g.key)SY=g}catch(e){}
 let SYNCEST='';
 let _tmr=null;
 const hora=()=>new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
 
 function syncListo(){return !!(SY.url&&SY.key)}
 function cab(){return {'apikey':SY.key,'Authorization':'Bearer '+SY.key,'Content-Type':'application/json'}}
-function estado(t){SYNCEST=t;const e=document.getElementById('syEstado');if(e)e.textContent=t}
+function estado(t){SYNCEST=t;
+  const e=document.getElementById('syEstado');if(e)e.textContent=t;
+  const a=document.querySelector('.autosave');
+  if(a){const mal=/Error|Sin conexion|No se pudo/.test(t);
+    a.classList.toggle('off',mal);
+    a.lastChild.nodeValue=mal?'Sin guardar en la nube':'Guardado automático';}
+}
 
 function detalle(r){
   return r.text().then(t=>{
@@ -389,6 +517,7 @@ function upsert(aid,campo,valor){
   e[campo]=valor;
   if(!e.asist&&!e.val){t.evals=t.evals.filter(x=>x!==e)}
   save();
+  if(typeof pintarMetricas==='function')pintarMetricas();
 }
 
 /* ---------- Informes PDF ---------- */
@@ -440,14 +569,14 @@ function informeAlumno(){
 function vDatos(){
   const ok=syncListo();
   let h=`<div class="card"><h2>Sincronización</h2>`;
-  h+=`<div class="hint" style="margin:0 0 10px">${ok?'Activa. Los cambios se guardan en la nube y aparecen en tus otros dispositivos.':'Sin configurar. Ahora los datos viven solo en este dispositivo.'}</div>`;
+  h+=`<div class="hint" style="margin:0 0 10px">${ok?'Activa. Los cambios se guardan en la nube y aparecen en tus otros dispositivos. No hay nada que configurar.':'Sin configurar. Ahora los datos viven solo en este dispositivo.'}</div>`;
   h+=`<div style="padding:9px 12px;background:#f3f5f9;border-radius:10px;font-size:12.5px;font-weight:600;color:var(--txt2);margin-bottom:12px;word-break:break-word;line-height:1.35" id="syEstado">${SYNCEST||(ok?'Listo':'Falta la clave')}</div>`;
   h+=`<label class="f">URL del proyecto</label><input type="text" id="syUrl" placeholder="https://xxxxx.supabase.co" value="${SY.url||''}">`;
   h+=`<label class="f">Clave anon (publishable)</label><input type="text" id="syKey" placeholder="sb_publishable_..." value="${SY.key||''}">`;
   h+=`<button type="button" class="oro" id="sySave">Activar sincronización</button>`;
   h+=`<div class="row"><button type="button" id="syUp">Subir ahora</button><button type="button" id="syDown">Traer ahora</button></div>`;
   h+=`</div>`;
-  h+=`<div class="card"><h2>Cómo usarla en varios dispositivos</h2><div class="hint">1. Pega aquí la URL y la clave, y toca Activar.<br>2. Haz lo mismo en la tablet y en el computador, con los mismos datos.<br>3. Listo: lo que registres en uno aparece en los otros al abrir la app.<br><br>La clave está en Supabase → Settings → API. Es la clave pública (anon), no la secreta.</div></div>`;
+  h+=`<div class="card"><h2>Cómo usarla en varios dispositivos</h2><div class="hint">Abre esta misma dirección en el iPhone, la tablet o el computador. La conexión ya viene incluida: lo que registres en uno aparece en los otros al abrir la app.<br><br>Los campos de arriba solo hacen falta si algún día cambias de proyecto en Supabase.</div></div>`;
   return h;
 }
 
@@ -477,8 +606,18 @@ function bindFilas(){
   if(sg)sg.addEventListener('input',()=>{const n=parseInt(sg.value,10);testAct().seg=isNaN(n)?0:n;save()});
 }
 
+function pintarCabecera(){
+  const p=document.getElementById('pillTxt');if(p)p.textContent=curso().n;
+  const sel=document.getElementById('pillSel');
+  if(sel)sel.innerHTML=DB.cursos.map(c=>`<option value="${c.id}" ${c.id===DB.activo?'selected':''}>${c.n}</option>`).join('');
+}
+
 function bind(){
   const $=id=>document.getElementById(id);
+  pintarCabecera();
+  if($('pillCurso'))$('pillCurso').addEventListener('click',()=>{const s=$('pillSel');if(s){s.style.pointerEvents='auto';s.focus();s.click();if(s.showPicker)try{s.showPicker()}catch(e){}}});
+  if($('pillSel'))$('pillSel').addEventListener('change',e=>{DB.activo=e.target.value;save();render()});
+  if($('irAlumno'))$('irAlumno').addEventListener('click',()=>{VIEW='alumno';render()});
   if($('selCurso'))$('selCurso').addEventListener('change',e=>{DB.activo=e.target.value;save();render()});
   if($('addAlu')){$('addAlu').addEventListener('click',()=>{const n=$('nuevoAlu').value.trim();if(!n)return;curso().alumnos.push({id:uid(),n:n.toUpperCase()});save();render();toast('Estudiante agregado')})}
   document.querySelectorAll('[id^="verA"]').forEach(b=>b.addEventListener('click',()=>{DB.alumno=b.id.slice(4);save();VIEW='alumno';render()}));
