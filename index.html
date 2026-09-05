@@ -277,7 +277,7 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">30</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">32</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -295,7 +295,7 @@ nav a.on svg{stroke-width:2.1}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='30';
+const VER='32';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -586,23 +586,77 @@ function vAlumno(){
       <input type="text" id="buscaEst" placeholder="Buscar por nombre o apellido" autocomplete="off">
       <div class="pklist" id="pklist">${filasPicker('')}</div>
     </div></div>`;
-  h+=`<div class="card"><h2>${a.n}</h2>`;
-  DB.tests.forEach(t=>{
-    const evals=t.evals.filter(e=>e.aid===a.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-    h+=`<h3>${t.ico} ${nomTest(t)}</h3>`;
-    if(!evals.length){h+=`<div style="font-size:12px;color:var(--txt2)">Sin registro</div>`;return}
-    h+=`<div class="tw"><table><thead><tr><th>Fecha</th><th>Asist.</th><th>Valor</th><th>Nivel</th><th>Δ</th></tr></thead><tbody>`;
-    evals.forEach((e,i)=>{
-      const niv=nivel(t,e.val);
-      const diff=i<evals.length-1?(num(e.val)-num(evals[i+1].val)):null;
-      const d=diff!==null?`<td class="delta ${diff>0?'up':(diff<0?'down':'eq')}">${diff>0?'+':''}${fmt(diff,0)}</td>`:'<td>—</td>';
-      h+=`<tr><td>${fcorta(e.fecha)}</td><td>${e.asist||'—'}</td><td>${e.val||'—'}</td><td><span class="lvl ${niv}">${{a:'A',m:'M',b:'B',x:'—'}[niv]}</span></td>${d}</tr>`;
-    });
-    h+=`</tbody></table></div>`;
+  // ---- resumen del estudiante ----
+  const resumen=DB.tests.map(t=>{
+    const ev=(t.evals||[]).filter(e=>e.aid===a.id).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
+    const con=ev.filter(e=>e.val);
+    return {t, ev, con,
+      prim: con.length?con[0]:null,
+      ult: con.length?con[con.length-1]:null,
+      m: con.length>1?mejora(t,con[0].val,con[con.length-1].val):null};
   });
-  h+=`<button type="button" class="cta" id="pdfAlumno" style="margin-top:12px"><span class="ico">📄</span>Informe en PDF<span class="arrow">›</span></button>`;
+  const conReg=resumen.filter(r=>r.con.length).length;
+  const compar=resumen.filter(r=>r.m);
+  const subieron=compar.filter(r=>r.m.c==='up').length;
+  const jornadas=(()=>{const f={};DB.tests.forEach(t=>(t.evals||[]).forEach(e=>{if(e.aid===a.id)f[e.fecha]=1}));return Object.keys(f).length})();
+
+  h+=`<div class="card top">
+    <div class="thero"><div class="txt">
+      <div class="chip"><i></i>${c.n}</div>
+      <h1 class="titulo" style="font-size:23px">${a.n}</h1>
+      <div class="meta">Ficha individual de condición física · 2026</div>
+    </div></div>
+    <div class="m3">
+      <div class="mc az"><div class="v">${conReg}/${DB.tests.length}</div><div class="l">Tests con registro</div></div>
+      <div class="mc vd"><div class="v">${compar.length?subieron+'/'+compar.length:'—'}</div><div class="l">Mejoró</div></div>
+      <div class="mc mo"><div class="v">${jornadas}</div><div class="l">${jornadas===1?'Jornada':'Jornadas'}</div></div>
+    </div></div>`;
+
+  // ---- tabla resumen: una fila por test ----
+  h+=`<div class="card"><h2>Resumen por test</h2><div class="tabc"><table><thead><tr>
+    <th class="est">Test</th><th>1ª</th><th>Última</th><th>Avance</th></tr></thead><tbody>`;
+  resumen.forEach(r=>{
+    const u=r.t.u?' <span style="color:#93a1ba;font-weight:600">'+r.t.u+'</span>':'';
+    h+=`<tr><td class="est"><span style="display:inline-flex;align-items:center;gap:7px">${icoSVG(r.t.id,'tico ti')}${nomTest(r.t)}</span></td>`;
+    if(!r.con.length){h+=`<td colspan="3" style="color:#93a1ba">Sin registro</td></tr>`;return}
+    h+=`<td>${r.prim.val}</td><td><b>${r.ult.val}</b>${u}</td>
+        <td class="trend ${r.m?r.m.c:'eq'}">${r.m?r.m.t:'—'}</td></tr>`;
+  });
+  h+=`</tbody></table></div>
+    <div class="leyenda"><span><b class="trend up">verde</b> mejoró</span><span><b class="trend down">rojo</b> retrocedió</span><span><b>=</b> sin cambio</span></div></div>`;
+
+  // ---- detalle por fecha, solo de tests con registro ----
+  const conDatos=resumen.filter(r=>r.ev.length);
+  if(conDatos.length){
+    h+=`<div class="card"><h2>Detalle por fecha</h2>`;
+    conDatos.forEach(r=>{
+      h+=`<div class="thead" style="margin:14px 0 7px;align-items:center;gap:10px">
+        <div class="tround" style="width:38px;height:38px;flex:0 0 38px">${icoSVG(r.t.id,'tico')}</div>
+        <div class="txt"><b style="font-size:14px;color:var(--azul2)">${nomTest(r.t)}</b>
+        <div style="font-size:11.5px;color:var(--txt2)">${r.ev.length} ${r.ev.length===1?'registro':'registros'}${r.t.u?' · en '+nomUni(r.t.u):''}</div></div></div>`;
+      h+=`<div class="tabc"><table><thead><tr><th class="est" style="min-width:92px">Fecha</th><th>Asist.</th><th>Resultado</th><th>Avance</th></tr></thead><tbody>`;
+      r.ev.forEach((e,i)=>{
+        const m=i>0?mejora(r.t,r.ev[i-1].val,e.val):null;
+        h+=`<tr><td class="est" style="min-width:92px;font-weight:600">${fcorta(e.fecha)}</td>
+          <td>${e.asist||'—'}</td><td><b>${e.val||'—'}</b></td>
+          <td class="trend ${m?m.c:'eq'}">${m?m.t:'—'}</td></tr>`;
+      });
+      h+=`</tbody></table></div>`;
+    });
+    h+=`</div>`;
+  }
+
+  // ---- adaptaciones del estudiante ----
+  const ad=DB.adaptaciones[a.id];
+  if(ad&&Object.keys(ad).length){
+    h+=`<div class="card"><h2>Adaptaciones</h2>`;
+    Object.entries(ad).forEach(([tid,d])=>{const t=DB.tests.find(x=>x.id===tid);
+      h+=`<div class="paso"><div class="num" style="background:#eaf2fd;width:34px;height:34px;flex:0 0 34px">${icoSVG(tid,'tico')}</div><div class="tx"><b>${t?nomTest(t):tid}</b>${d}</div></div>`});
+    h+=`</div>`;
+  }
+
+  h+=`<button type="button" class="cta" id="pdfAlumno"><span class="ico">📄</span>Informe en PDF<span class="arrow">›</span></button>`;
   h+=`<button type="button" class="fila" id="docAlumno"><span class="ico">📝</span>Informe en Word<span class="arrow">›</span></button>`;
-  h+=`</div>`;
   return h;
 }
 
@@ -908,10 +962,21 @@ function cuerpoEstudiante(){
     <td><div class="v">${DB.tests.filter(t=>(t.evals||[]).some(e=>e.aid===a.id)).length}/${DB.tests.length}</div><div class="l">Tests con registro</div></td>
     <td><div class="v">${tot?mejs+'/'+tot:'—'}</div><div class="l">Tests en que mejoró</div></td>
     <td><div class="v">${c.n}</div><div class="l">Curso</div></td></tr></table>`;
+  // resumen de una fila por test
+  h+=`<h3 class="d">Resumen general</h3>`;
+  h+=`<table class="d"><thead><tr><th style="text-align:left">Test</th><th>Primera</th><th>Última</th><th>Avance</th><th>Registros</th></tr></thead><tbody>`;
+  DB.tests.forEach(t=>{
+    const con=(t.evals||[]).filter(e=>e.aid===a.id&&e.val).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
+    if(!con.length){h+=`<tr><td class="nm">${nomTest(t)}</td><td colspan="4" style="color:#8b96ab">Sin registro</td></tr>`;return}
+    const m=con.length>1?mejora(t,con[0].val,con[con.length-1].val):null;
+    h+=`<tr><td class="nm">${nomTest(t)}${t.u?' ('+nomUni(t.u)+')':''}</td><td>${con[0].val}</td><td><b>${con[con.length-1].val}</b></td><td class="${m?m.c:'eq'}">${m?m.t:'—'}</td><td>${con.length}</td></tr>`;
+  });
+  h+=`</tbody></table>`;
+
   DB.tests.forEach(t=>{
     const ev=(t.evals||[]).filter(e=>e.aid===a.id).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
+    if(!ev.length)return;
     h+=`<h3 class="d">${nomTest(t)}${t.u?' · '+nomUni(t.u):''}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}</h3>`;
-    if(!ev.length){h+=`<div style="font-size:9.5pt;color:#5d6a85">Sin registro</div>`;return}
     h+=`<table class="d"><thead><tr><th>Fecha</th><th>Asistencia</th><th>Resultado</th><th>Avance</th></tr></thead><tbody>`;
     ev.forEach((e,i)=>{
       const m=i>0?mejora(t,ev[i-1].val,e.val):null;
