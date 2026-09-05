@@ -53,7 +53,7 @@ tbody tr:nth-child(even) td{background:#fafbfe}
 .evtop .nm{font-size:13.5px;font-weight:600;line-height:1.25}
 .evbot{display:flex;gap:9px;align-items:center}
 .testgrp{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
-.testgrp button{width:100%;padding:11px 6px;margin:0;background:#fafbfc;color:var(--txt2);border:1px solid var(--linea);border-radius:10px;font-size:12.5px;font-weight:700;text-align:center;line-height:1.2}
+.testgrp button{width:100%;padding:11px 8px;margin:0;display:flex;align-items:center;justify-content:center;gap:7px;background:#fafbfc;color:var(--txt2);border:1px solid var(--linea);border-radius:10px;font-size:12.5px;font-weight:700;text-align:center;line-height:1.2}
 .testgrp button.sel{background:var(--azul);color:#fff;border-color:var(--azul)}
 .grupo{display:inline-flex;flex:0 0 auto;border:1px solid var(--linea);border-radius:10px;overflow:hidden}
 .grupo button{width:46px;padding:10px 0;margin:0;border:0;border-right:1px solid var(--linea);background:#fafbfc;color:var(--txt2);font-weight:700;font-size:12.5px;border-radius:0}
@@ -153,11 +153,17 @@ header{background:linear-gradient(180deg,#0f2b5b 0%,#17417f 100%);color:#fff;
 .m3 .mo{background:#f6edfb;border-color:#e6d7f2}
 
 /* ===== Icono de test ===== */
-.tico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;
-  stroke-linecap:round;stroke-linejoin:round}
-.tround{width:62px;height:62px;flex:0 0 62px;border-radius:50%;background:#e8f1fc;color:var(--azul2);
+.tico{width:26px;height:26px;display:block}
+.testgrp .ti{width:24px;height:24px;flex:0 0 24px}
+.tround{width:62px;height:62px;flex:0 0 62px;border-radius:50%;background:#e8f1fc;
   display:flex;align-items:center;justify-content:center}
-.tround .tico{width:32px;height:32px;stroke-width:1.6}
+.tround .tico{width:38px;height:38px}
+.tbig{width:96px;height:96px;flex:0 0 96px;border-radius:50%;background:#eaf2fd;
+  display:flex;align-items:center;justify-content:center;margin-left:10px}
+.tbig .tico{width:60px;height:60px}
+.paso .num .tico{width:22px;height:22px}
+.thero{display:flex;align-items:flex-start;gap:6px}
+.thero .txt{flex:1;min-width:0}
 .thead{display:flex;gap:14px;align-items:flex-start}
 .thead .txt{flex:1;min-width:0}
 
@@ -190,7 +196,7 @@ header{background:linear-gradient(180deg,#0f2b5b 0%,#17417f 100%);color:#fff;
 .hero .oro{color:var(--oro);font-weight:700}
 .paso{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #eef1f7}
 .paso:last-child{border-bottom:0}
-.paso .num{width:26px;height:26px;flex:0 0 26px;border-radius:50%;background:var(--azul);color:#fff;
+.paso .num{width:26px;height:26px;flex:0 0 26px;overflow:hidden;border-radius:50%;background:var(--azul);color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800}
 .paso .tx{font-size:13.5px;line-height:1.4;color:var(--txt)}
 .paso .tx b{display:block;font-size:14px;margin-bottom:1px}
@@ -246,7 +252,7 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">21</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">22</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -264,7 +270,7 @@ nav a.on svg{stroke-width:2.1}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='21';
+const VER='22';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -410,7 +416,7 @@ function vInicio(){
     <div class="paso"><div class="num">4</div><div class="tx"><b>Imprimes el informe</b>Del curso completo o de un estudiante, listo para guardar como PDF.</div></div>
   </div>`;
 
-  h+=`<div class="card"><h2>Los seis tests</h2>${DB.tests.map(t=>`<div class="paso"><div class="num" style="background:#f2f7fe;color:var(--azul2)">${t.ico}</div><div class="tx"><b>${t.n}</b>${t.tipo==='logro'?'Logrado o no logrado · '+(t.seg||30)+' segundos':'Resultado en '+(t.u||'número')}</div></div>`).join('')}</div>`;
+  h+=`<div class="card"><h2>Los seis tests</h2>${DB.tests.map(t=>`<div class="paso"><div class="num" style="background:#eaf2fd;width:34px;height:34px;flex:0 0 34px">${icoSVG(t.id,'tico')}</div><div class="tx"><b>${t.n}</b>${t.tipo==='logro'?'Logrado o no logrado · '+(t.seg||30)+' segundos':'Resultado en '+(t.u||'número')}</div></div>`).join('')}</div>`;
 
   h+=`<div class="hint" style="text-align:center;padding:4px 0 8px">Colegio Juan Pablo Segundo · Los Lagos</div>`;
   return h;
@@ -423,16 +429,18 @@ function vEvaluaciones(){
     ? `<div class="mcard m-mo"><div class="lab">Logro</div><div class="val">${m.logro===null?'—':m.logro+'%'}</div></div>`
     : `<div class="mcard m-mo"><div class="lab">Promedio</div><div class="val">${m.prom===null?'—':fmt(m.prom,1).replace('.',',')}</div></div>`;
 
-  let h=`<div class="card">
-    <div class="chip"><i></i>En evaluación</div>
-    <h1 class="titulo">${t.n}</h1>
-    <div class="meta">${c.alumnos.length} estudiantes${t.u?' · resultado en '+t.u:''}${t.tipo==='logro'?' · logrado o no logrado':''}</div>
-    <div class="codigo">${t.ico} ${t.id.toUpperCase()} · 2026</div>
+  let h=`<div class="card top">
+    <div class="thero"><div class="txt">
+      <div class="chip"><i></i>En evaluación</div>
+      <h1 class="titulo">${t.n}</h1>
+      <div class="meta">${c.alumnos.length} estudiantes${t.u?' · resultado en '+t.u:''}${t.tipo==='logro'?' · logrado o no logrado':''}</div>
+      <div class="codigo">EF ${t.id.toUpperCase()} · ${c.n} · 2026</div>
+    </div><div class="tbig">${icoSVG(t.id)}</div></div>
     <div id="extra">${extraHTML()}</div>
     <div class="fecharow"><label for="evalFecha">Fecha</label><input type="date" id="evalFecha" value="${hoy()}"></div>
   </div>`;
 
-  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${x.ico} ${x.n}</button>`).join('')}</div></div>`;
+  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${icoSVG(x.id,'tico ti')}<span>${x.n}</span></button>`).join('')}</div></div>`;
 
   h+=`<div class="mgrid" id="mgrid">
     <div class="mcard m-az"><div class="lab">Registrados</div><div class="val">${m.con}/${m.total}</div></div>
@@ -573,7 +581,7 @@ function vConsolidado(){
   </div>`;
   h+=`<div class="hint">Cada columna es una fecha de aplicación. La flecha compara con la evaluación anterior del mismo estudiante.</div></div>`;
 
-  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${x.ico} ${x.n}</button>`).join('')}</div></div>`;
+  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${icoSVG(x.id,'tico ti')}<span>${x.n}</span></button>`).join('')}</div></div>`;
 
   if(!fs.length){
     h+=`<div class="card"><h2>Sin evaluaciones</h2><div class="hint">Todavía no hay registros de este test. Ve a Evaluar y anota los primeros resultados.</div></div>`;
@@ -686,14 +694,15 @@ function subirPronto(){if(!syncListo()||typeof fetch!=='function')return;clearTi
 
 /* ---------- Registro de evaluaciones ---------- */
 const ICO={
- vel:'<circle cx="12" cy="5" r="2.1"/><path d="M11 8l-3 4 3 1 1 5"/><path d="M14 9l3 2"/><path d="M8 12l-3 1"/><path d="M3 6h4M2 9h3"/>',
- sal:'<circle cx="13" cy="4.6" r="2"/><path d="M12 7l-3 3 2 3-1 5"/><path d="M15 8l2 3-2 2"/><path d="M4 19h16"/>',
- abd:'<circle cx="7" cy="8" r="2"/><path d="M9 10l4 2 4-1"/><path d="M13 12l-1 5"/><path d="M4 19h16"/>',
- pla:'<circle cx="5.5" cy="10" r="1.8"/><path d="M7 11h9l3 4"/><path d="M9 12v4M15 12v4"/><path d="M3 18h18"/>',
- fle:'<circle cx="6" cy="9" r="1.9"/><path d="M8 11h8l3 3"/><path d="M8 11v5M16 12v4"/><path d="M3 18h18"/>',
- tro:'<circle cx="13" cy="4.4" r="2"/><path d="M12 7l-2 4 3 2 1 5"/><path d="M16 9l2 2-2 2"/><path d="M9 11l-4 1"/><path d="M7 17l-3 3"/>'
+ vel:'<circle cx="32" cy="36" r="19" fill="none" stroke="#1559ad" stroke-width="4.5"/><path d="M32 24v12l8 5" fill="none" stroke="#d4a017" stroke-width="4" stroke-linecap="round"/><rect x="27" y="9" width="10" height="6" rx="2" fill="#0f2b5b"/><path d="M32 15v3" stroke="#0f2b5b" stroke-width="4"/><path d="M48 17l4-4M12 26H4M14 33H6" stroke="#7fb2e8" stroke-width="3.5" stroke-linecap="round"/>',
+ sal:'<circle cx="41" cy="13" r="6" fill="#0f2b5b"/><path d="M38 21l-9 8 7 6-2 12" fill="none" stroke="#1559ad" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M43 24l7 6-5 6" fill="none" stroke="#1559ad" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 44q10-22 26-24" fill="none" stroke="#d4a017" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 7"/><path d="M6 54h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><path d="M18 50v8M34 50v8M50 50v8" stroke="#7fb2e8" stroke-width="3" stroke-linecap="round"/>',
+ abd:'<path d="M6 50h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><path d="M34 46l9-13 8 13" fill="none" stroke="#d4a017" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 46l-9-14" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><circle cx="21" cy="26" r="6.5" fill="#0f2b5b"/><path d="M26 29l12 4" fill="none" stroke="#1559ad" stroke-width="4.5" stroke-linecap="round"/><path d="M20 15q6-5 12-1" fill="none" stroke="#7fb2e8" stroke-width="3.2" stroke-linecap="round"/>',
+ pla:'<path d="M6 50h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><circle cx="14" cy="26" r="6" fill="#0f2b5b"/><path d="M20 28h30" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><path d="M50 28l4 18" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><path d="M20 29v14M13 43h13" fill="none" stroke="#d4a017" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 43v3M52 46h5" stroke="#0f2b5b" stroke-width="4" stroke-linecap="round"/>',
+ fle:'<path d="M6 50h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><circle cx="15" cy="30" r="6" fill="#0f2b5b"/><path d="M21 32h28l5 14" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 34l-4 6 6 5" fill="none" stroke="#d4a017" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 22V9M32 13l4-4 4 4M32 18l4 4 4-4" fill="none" stroke="#7fb2e8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>',
+ tro:'<circle cx="38" cy="12" r="6" fill="#0f2b5b"/><path d="M35 20l-8 9 8 5 2 14" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M35 34l-9 8" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><path d="M40 23l9 5-4 7" fill="none" stroke="#d4a017" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 22H8M17 30H5M22 38H12" stroke="#7fb2e8" stroke-width="3.5" stroke-linecap="round"/>'
 };
-function icoSVG(id,cls){return `<svg class="${cls||'tico'}" viewBox="0 0 24 24">${ICO[id]||ICO.vel}</svg>`}
+function icoSVG(id,cls){return `<svg class="${cls||'tico'}" viewBox="0 0 64 64">${ICO[id]||ICO.vel}</svg>`}
+
 
 function testAct(){return DB.tests.find(t=>t.id===TESTSEL)||DB.tests[0]}
 function fechaAct(){const f=document.getElementById('evalFecha');return f?f.value:hoy()}
