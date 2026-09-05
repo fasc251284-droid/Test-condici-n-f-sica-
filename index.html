@@ -201,6 +201,31 @@ header{background:linear-gradient(180deg,#0f2b5b 0%,#17417f 100%);color:#fff;
 .paso .tx{font-size:13.5px;line-height:1.4;color:var(--txt)}
 .paso .tx b{display:block;font-size:14px;margin-bottom:1px}
 
+/* ===== Selector de estudiante ===== */
+.selbtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:#f5f8fd;
+  border:1px solid #dbe6f5;color:var(--txt);border-radius:14px;padding:12px 14px!important;
+  font-size:15px;font-weight:700;margin:0!important}
+.selbtn .np{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--azul);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.selbtn .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.selbtn .cv{color:var(--txt2);font-size:15px}
+.navest{display:flex;gap:8px;margin-top:9px}
+.navest button{flex:1;margin:0!important;background:#fff;border:1px solid #dbe6f5;color:var(--azul2);
+  font-size:13px;font-weight:700;padding:9px 6px!important;border-radius:11px}
+.navest button:disabled{opacity:.4}
+.picker{margin-top:10px;border:1px solid #dbe6f5;border-radius:14px;overflow:hidden}
+.picker input{margin:0!important;border:0;border-bottom:1px solid #eef2f8;border-radius:0;
+  font-size:15px;padding:12px 14px}
+.pklist{max-height:290px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.pkrow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:0;
+  border-bottom:1px solid #f1f4f9;color:var(--txt);padding:11px 14px!important;margin:0!important;
+  font-size:14px;font-weight:600;border-radius:0}
+.pkrow:last-child{border-bottom:0}
+.pkrow .np{width:26px;flex:0 0 26px;color:#93a1ba;font-size:11px;font-weight:800}
+.pkrow.on{background:#eaf2fd;color:var(--azul2);font-weight:800}
+.pkrow .tick{margin-left:auto;color:var(--azul2);font-weight:800}
+.pkvacio{padding:16px;text-align:center;color:var(--txt2);font-size:13px}
+
 /* ===== Navegacion inferior ===== */
 nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.97);
   backdrop-filter:saturate(180%) blur(12px);border-top:1px solid #e6eaf2;display:flex;
@@ -252,7 +277,7 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">28</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">30</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -270,7 +295,7 @@ nav a.on svg{stroke-width:2.1}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='28';
+const VER='30';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -531,12 +556,36 @@ function refrescar(){
   bindFilas();
 }
 
+const sinTilde=x=>(x||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+
+function filasPicker(q){
+  const c=curso();
+  const t=sinTilde((q||'').trim());
+  const lista=c.alumnos.map((x,i)=>({x,i})).filter(o=>!t||sinTilde(o.x.n).includes(t));
+  if(!lista.length)return `<div class="pkvacio">Ningún estudiante coincide con la búsqueda</div>`;
+  return lista.map(o=>`<button type="button" class="pkrow ${o.x.id===DB.alumno?'on':''}" data-e="${o.x.id}">
+    <span class="np">${String(o.i+1).padStart(2,'0')}</span><span>${o.x.n}</span>
+    ${o.x.id===DB.alumno?'<span class="tick">✓</span>':''}</button>`).join('');
+}
+
 function vAlumno(){
   const c=curso();
   if(!c.alumnos.length)return `<div class="card"><h2>${c.n} no tiene estudiantes</h2><div class="hint">Agrégalos en la pestaña Cursos y vuelve aquí.</div><button type="button" class="cta" id="goCur" style="margin-top:12px"><span class="ico">👥</span>Ir a Cursos<span class="arrow">›</span></button></div>`;
   if(!c.alumnos.find(a=>a.id===DB.alumno))DB.alumno=c.alumnos[0].id;
   const a=c.alumnos.find(x=>x.id===DB.alumno);
-  let h=`<div class="card"><h2>Estudiante</h2><select id="selAlu">${c.alumnos.map((x,i)=>`<option value="${x.id}" ${x.id===a.id?'selected':''}>${i+1}. ${x.n}</option>`).join('')}</select></div>`;
+  const pos=c.alumnos.findIndex(x=>x.id===a.id);
+  let h=`<div class="card"><h2>Estudiante</h2>
+    <button type="button" class="selbtn" id="abrirSel">
+      <span class="np">${String(pos+1).padStart(2,'0')}</span>
+      <span class="nm">${a.n}</span><span class="cv">▾</span></button>
+    <div class="navest">
+      <button type="button" id="estPrev" ${pos<=0?'disabled':''}>‹ Anterior</button>
+      <button type="button" id="estNext" ${pos>=c.alumnos.length-1?'disabled':''}>Siguiente ›</button>
+    </div>
+    <div class="picker" id="picker" style="display:none">
+      <input type="text" id="buscaEst" placeholder="Buscar por nombre o apellido" autocomplete="off">
+      <div class="pklist" id="pklist">${filasPicker('')}</div>
+    </div></div>`;
   h+=`<div class="card"><h2>${a.n}</h2>`;
   DB.tests.forEach(t=>{
     const evals=t.evals.filter(e=>e.aid===a.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
@@ -570,11 +619,12 @@ function valNum(t,v){
 function mejora(t,ant,act){
   const a=valNum(t,ant), b=valNum(t,act);
   if(a===null||b===null)return null;
-  const d=b-a;
+  const d=Math.round((b-a)*10)/10;
   if(d===0)return {c:'eq',t:'='};
   const bueno = t.mejor==='menor' ? d<0 : d>0;
-  const signo = (t.tipo==='logro') ? (d>0?'↑':'↓')
-    : (d>0?'+':'') + (Math.round(Math.abs(d)*10)%10===0?d.toFixed(0):d.toFixed(1)).replace('.',',');
+  const abs=Math.abs(d);
+  const txt=(abs%1===0?abs.toFixed(0):abs.toFixed(1).replace('.',','));
+  const signo = (t.tipo==='logro') ? (d>0?'↑':'↓') : (d>0?'+':'−')+txt;
   return {c:bueno?'up':'down', t:signo};
 }
 
@@ -947,6 +997,12 @@ function pintarCabecera(){
   if(sel)sel.innerHTML=DB.cursos.map(c=>`<option value="${c.id}" ${c.id===DB.activo?'selected':''}>${c.n}</option>`).join('');
 }
 
+function bindPicker(){
+  document.querySelectorAll('.pkrow').forEach(b=>b.addEventListener('click',()=>{
+    DB.alumno=b.dataset.e;save();render();
+  }));
+}
+
 function bind(){
   const $=id=>document.getElementById(id);
   pintarCabecera();
@@ -978,7 +1034,16 @@ function bind(){
     bajarWord(nomTest(t)+' '+c.n,h);
   });
   
-  if($('selAlu'))$('selAlu').addEventListener('change',e=>{DB.alumno=e.target.value;save();render()});
+  if($('abrirSel'))$('abrirSel').addEventListener('click',()=>{
+    const p=$('picker');const ab=p.style.display==='none';
+    p.style.display=ab?'block':'none';
+    if(ab){const b=$('buscaEst');b.value='';$('pklist').innerHTML=filasPicker('');bindPicker();setTimeout(()=>b.focus(),50)}
+  });
+  if($('buscaEst'))$('buscaEst').addEventListener('input',e=>{$('pklist').innerHTML=filasPicker(e.target.value);bindPicker()});
+  bindPicker();
+  const c0=curso(),p0=c0.alumnos.findIndex(x=>x.id===DB.alumno);
+  if($('estPrev'))$('estPrev').addEventListener('click',()=>{if(p0>0){DB.alumno=c0.alumnos[p0-1].id;save();render()}});
+  if($('estNext'))$('estNext').addEventListener('click',()=>{if(p0<c0.alumnos.length-1){DB.alumno=c0.alumnos[p0+1].id;save();render()}});
   if($('addAdapt')){$('addAdapt').addEventListener('click',()=>{const aid=$('selAluAd').value;const tid=$('selTestAd').value;const desc=$('descAdapt').value.trim();if(!desc)return;if(!DB.adaptaciones[aid])DB.adaptaciones[aid]={};DB.adaptaciones[aid][tid]=desc;save();render();toast('Adaptación guardada')})}
   document.querySelectorAll('[id^="delAd"]').forEach(b=>b.addEventListener('click',()=>{const [aid,tid]=b.id.slice(5).split('-');if(DB.adaptaciones[aid])delete DB.adaptaciones[aid][tid];save();render()}));
   if($('sySave')){$('sySave').addEventListener('click',()=>{
