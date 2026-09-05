@@ -137,6 +137,21 @@ header{background:linear-gradient(180deg,#0f2b5b 0%,#17417f 100%);color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:15px}
 .fila .arrow{margin-left:auto;color:var(--txt2);font-size:16px}
 
+/* ===== Inicio ===== */
+.hero{background:linear-gradient(160deg,#12356d 0%,#0f2b5b 60%,#0b2049 100%);color:#fff;
+  border:0;border-radius:22px;padding:22px 20px 20px}
+.hero .chip{background:rgba(255,255,255,.15);color:#dbe8ff}
+.hero .chip i{background:var(--oro)}
+.hero .titulo{color:#fff;font-size:29px}
+.hero p{margin:10px 0 0;font-size:14.5px;line-height:1.5;color:#c3d3ef}
+.hero .oro{color:var(--oro);font-weight:700}
+.paso{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #eef1f7}
+.paso:last-child{border-bottom:0}
+.paso .num{width:26px;height:26px;flex:0 0 26px;border-radius:50%;background:var(--azul);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800}
+.paso .tx{font-size:13.5px;line-height:1.4;color:var(--txt)}
+.paso .tx b{display:block;font-size:14px;margin-bottom:1px}
+
 /* ===== Navegacion inferior ===== */
 nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.97);
   backdrop-filter:saturate(180%) blur(12px);border-top:1px solid #e6eaf2;display:flex;
@@ -174,7 +189,6 @@ nav a.on svg{stroke-width:2.1}
 .delta.up{color:var(--ok)}
 .delta.down{color:var(--baj)}
 .delta.eq{color:var(--txt2)}
-  text-decoration:none;cursor:pointer}
 @media print{body{padding:0;background:#fff}header,nav{display:none!important}}
 </style>
 </head>
@@ -189,28 +203,29 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">16</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">18</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
 <main id="app"></main>
 
 <nav>
+  <a data-v="inicio"><svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5"/><path d="M6 9.8V20h12V9.8"/><path d="M10 20v-5h4v5"/></svg>Inicio</a>
   <a data-v="cursos"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 6.5a3 3 0 010 5.6"/><path d="M18 14.5c2 .7 3.2 2.3 3.2 4.5"/></svg>Cursos</a>
   <a data-v="evaluaciones"><svg viewBox="0 0 24 24"><path d="M5 4h9l5 5v11a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M14 4v5h5"/><path d="M8 13h8M8 17h5"/></svg>Evaluaciones</a>
   <a data-v="alumno"><svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.6"/><path d="M12 9v6"/><path d="M8 11l4-2 4 2"/><path d="M9 21l3-6 3 6"/></svg>Alumno</a>
   <a data-v="adaptaciones"><svg viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2.2"/><circle cx="10" cy="16" r="2.2"/></svg>Adaptaciones</a>
-  <a data-v="datos"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v11c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-11"/><path d="M5 12c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8"/></svg>Datos</a>
 </nav>
 
 <div id="printarea"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='16';
+const VER='18';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
+  if(typeof fetch!=='function')return;
   fetch(location.pathname+'?_ac='+Date.now(),{cache:'no-store'})
     .then(r=>r.ok?r.text():null)
     .then(t=>{
@@ -278,12 +293,12 @@ const fcorta=f=>{if(!f)return '—';const p=f.split('-');return p.length===3?p[2
 
 function nivel(test,v){const x=num(v);if(x===null)return 'x';if(test.tipo==='logro')return(v==='L')?'a':(v==='P'?'m':'b');if(test.mejor==='menor')return x<=test.c1?'a':(x<=test.c2?'m':'b');return x>=test.c1?'a':(x>=test.c2?'m':'b')}
 
-let VIEW='cursos';let LASTVIEW=null;let TESTSEL=DB.tests[0].id;
+let VIEW='inicio';let LASTVIEW=null;let TESTSEL=DB.tests[0].id;
 document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();VIEW=a.dataset.v;render()}));
 
 function render(){
   document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===VIEW));
-  const v={cursos:vCursos,evaluaciones:vEvaluaciones,alumno:vAlumno,adaptaciones:vAdaptaciones,datos:vDatos};
+  const v={inicio:vInicio,cursos:vCursos,evaluaciones:vEvaluaciones,alumno:vAlumno,adaptaciones:vAdaptaciones,datos:vDatos};
   const y=window.scrollY;
   document.getElementById('app').innerHTML=v[VIEW]?v[VIEW]():'';
   if(VIEW!==LASTVIEW){window.scrollTo(0,0);LASTVIEW=VIEW}else{window.scrollTo(0,y)}
@@ -316,6 +331,45 @@ function metricas(){
   return {pres,aus,just,con,total:c.alumnos.length,
           prom:(t.tipo!=='logro'&&con)?(suma/con):null,
           logro:(t.tipo==='logro'&&con)?Math.round(logr/con*100):null};
+}
+
+function vInicio(){
+  const c=curso();
+  let regs=0, fechas={};
+  DB.tests.forEach(t=>(t.evals||[]).forEach(e=>{regs++;fechas[e.fecha]=1}));
+  const jornadas=Object.keys(fechas).length;
+  const alumnos=DB.cursos.reduce((n,x)=>n+x.alumnos.length,0);
+
+  let h=`<div class="card hero">
+    <div class="chip"><i></i>Año escolar 2026</div>
+    <h1 class="titulo">Test de Condición Física</h1>
+    <p>Registra los seis tests físicos de <span class="oro">5º a 8º básico</span>, con asistencia, resultados por fecha y comparación entre evaluaciones. Los datos se guardan solos y se comparten entre tu teléfono, la tablet y el computador.</p>
+  </div>`;
+
+  h+=`<div class="mgrid">
+    <div class="mcard m-az"><div class="lab">Estudiantes</div><div class="val">${alumnos}</div></div>
+    <div class="mcard m-vd"><div class="lab">Tests</div><div class="val">${DB.tests.length}</div></div>
+    <div class="mcard m-mo"><div class="lab">Registros</div><div class="val">${regs}</div></div>
+    <div class="mcard m-na"><div class="lab">Jornadas</div><div class="val">${jornadas}</div></div>
+  </div>`;
+
+  h+=`<button type="button" class="cta" id="goEval"><span class="ico">📝</span>Registrar evaluación<span class="arrow">›</span></button>`;
+  h+=`<button type="button" class="fila" id="goAlu"><span class="ico">🏃</span>Ficha del estudiante<span class="arrow">›</span></button>`;
+  h+=`<button type="button" class="fila" id="goCur"><span class="ico">👥</span>Cursos y estudiantes<span class="arrow">›</span></button>`;
+  h+=`<button type="button" class="fila" id="goAda"><span class="ico">⚙️</span>Adaptaciones<span class="arrow">›</span></button>`;
+  h+=`<button type="button" class="fila" id="goDat"><span class="ico">☁️</span>Sincronización<span class="arrow">›</span></button>`;
+
+  h+=`<div class="card"><h2>Cómo funciona</h2>
+    <div class="paso"><div class="num">1</div><div class="tx"><b>Eliges el test y la fecha</b>Velocidad, salto, abdominales, plancha, flexiones o trote.</div></div>
+    <div class="paso"><div class="num">2</div><div class="tx"><b>Marcas asistencia y resultado</b>Un toque cambia entre presente, ausente y justificado. El resultado se escribe al lado.</div></div>
+    <div class="paso"><div class="num">3</div><div class="tx"><b>Revisas el avance</b>La ficha del estudiante muestra todas sus fechas y cuánto mejoró entre una y otra.</div></div>
+    <div class="paso"><div class="num">4</div><div class="tx"><b>Imprimes el informe</b>Del curso completo o de un estudiante, listo para guardar como PDF.</div></div>
+  </div>`;
+
+  h+=`<div class="card"><h2>Los seis tests</h2>${DB.tests.map(t=>`<div class="paso"><div class="num" style="background:#f2f7fe;color:var(--azul2)">${t.ico}</div><div class="tx"><b>${t.n}</b>${t.tipo==='logro'?'Logrado o no logrado · '+(t.seg||30)+' segundos':'Resultado en '+(t.u||'número')}</div></div>`).join('')}</div>`;
+
+  h+=`<div class="hint" style="text-align:center;padding:4px 0 8px">Colegio Juan Pablo Segundo · Los Lagos</div>`;
+  return h;
 }
 
 function vEvaluaciones(){
@@ -503,7 +557,7 @@ function subir(){
   }).catch(e=>{estado('Error al guardar · '+e);return false});
 }
 
-function subirPronto(){if(!syncListo())return;clearTimeout(_tmr);_tmr=setTimeout(subir,1500)}
+function subirPronto(){if(!syncListo()||typeof fetch!=='function')return;clearTimeout(_tmr);_tmr=setTimeout(subir,1500)}
 
 /* ---------- Registro de evaluaciones ---------- */
 function testAct(){return DB.tests.find(t=>t.id===TESTSEL)||DB.tests[0]}
@@ -618,6 +672,8 @@ function bind(){
   if($('pillCurso'))$('pillCurso').addEventListener('click',()=>{const s=$('pillSel');if(s){s.style.pointerEvents='auto';s.focus();s.click();if(s.showPicker)try{s.showPicker()}catch(e){}}});
   if($('pillSel'))$('pillSel').addEventListener('change',e=>{DB.activo=e.target.value;save();render()});
   if($('irAlumno'))$('irAlumno').addEventListener('click',()=>{VIEW='alumno';render()});
+  const ir={goEval:'evaluaciones',goAlu:'alumno',goCur:'cursos',goAda:'adaptaciones',goDat:'datos'};
+  Object.keys(ir).forEach(k=>{if($(k))$(k).addEventListener('click',()=>{VIEW=ir[k];render()})});
   if($('selCurso'))$('selCurso').addEventListener('change',e=>{DB.activo=e.target.value;save();render()});
   if($('addAlu')){$('addAlu').addEventListener('click',()=>{const n=$('nuevoAlu').value.trim();if(!n)return;curso().alumnos.push({id:uid(),n:n.toUpperCase()});save();render();toast('Estudiante agregado')})}
   document.querySelectorAll('[id^="verA"]').forEach(b=>b.addEventListener('click',()=>{DB.alumno=b.id.slice(4);save();VIEW='alumno';render()}));
@@ -644,7 +700,7 @@ function bind(){
 }
 
 render();
-if(syncListo())bajar(false);
+try{if(syncListo()&&typeof fetch==='function')bajar(false)}catch(e){}
 </script>
 </body>
 </html>
