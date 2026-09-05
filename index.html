@@ -252,7 +252,7 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">22</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">24</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -270,7 +270,7 @@ nav a.on svg{stroke-width:2.1}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='22';
+const VER='24';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -342,7 +342,7 @@ const fcorta=f=>{if(!f)return '—';const p=f.split('-');return p.length===3?p[2
 
 function nivel(test,v){const x=num(v);if(x===null)return 'x';if(test.tipo==='logro')return(v==='L')?'a':(v==='P'?'m':'b');if(test.mejor==='menor')return x<=test.c1?'a':(x<=test.c2?'m':'b');return x>=test.c1?'a':(x>=test.c2?'m':'b')}
 
-let VIEW='inicio';let LASTVIEW=null;let TESTSEL=DB.tests[0].id;
+let VIEW='inicio';let LASTVIEW=null;let TESTSEL=(DB.tests.find(t=>t.id===DB.testsel)||DB.tests[0]).id;
 document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();VIEW=a.dataset.v;render()}));
 
 function render(){
@@ -500,7 +500,20 @@ function pintarMetricas(){
     +`<div class="mcard m-na"><div class="lab">Ausentes</div><div class="val">${m.aus}</div></div>`;
 }
 
+function pintarCabTest(){
+  const t=testAct(),c=curso();
+  const ic=document.querySelector('.tbig');
+  if(ic)ic.innerHTML=icoSVG(t.id);
+  const ti=document.querySelector('.thero .titulo');
+  if(ti)ti.textContent=t.n;
+  const me=document.querySelector('.thero .meta');
+  if(me)me.textContent=`${c.alumnos.length} estudiantes`+(t.u?' · resultado en '+t.u:'')+(t.tipo==='logro'?' · logrado o no logrado':'');
+  const co=document.querySelector('.thero .codigo');
+  if(co)co.textContent=`EF ${t.id.toUpperCase()} · ${c.n} · 2026`;
+}
+
 function refrescar(){
+  pintarCabTest();
   const fx=document.getElementById('filas');if(!fx)return;
   fx.innerHTML=filasHTML();
   pintarMetricas();
@@ -698,7 +711,7 @@ const ICO={
  sal:'<circle cx="41" cy="13" r="6" fill="#0f2b5b"/><path d="M38 21l-9 8 7 6-2 12" fill="none" stroke="#1559ad" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M43 24l7 6-5 6" fill="none" stroke="#1559ad" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 44q10-22 26-24" fill="none" stroke="#d4a017" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 7"/><path d="M6 54h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><path d="M18 50v8M34 50v8M50 50v8" stroke="#7fb2e8" stroke-width="3" stroke-linecap="round"/>',
  abd:'<path d="M6 50h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><path d="M34 46l9-13 8 13" fill="none" stroke="#d4a017" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 46l-9-14" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><circle cx="21" cy="26" r="6.5" fill="#0f2b5b"/><path d="M26 29l12 4" fill="none" stroke="#1559ad" stroke-width="4.5" stroke-linecap="round"/><path d="M20 15q6-5 12-1" fill="none" stroke="#7fb2e8" stroke-width="3.2" stroke-linecap="round"/>',
  pla:'<path d="M6 50h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><circle cx="14" cy="26" r="6" fill="#0f2b5b"/><path d="M20 28h30" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><path d="M50 28l4 18" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><path d="M20 29v14M13 43h13" fill="none" stroke="#d4a017" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 43v3M52 46h5" stroke="#0f2b5b" stroke-width="4" stroke-linecap="round"/>',
- fle:'<path d="M6 50h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><circle cx="15" cy="30" r="6" fill="#0f2b5b"/><path d="M21 32h28l5 14" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 34l-4 6 6 5" fill="none" stroke="#d4a017" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 22V9M32 13l4-4 4 4M32 18l4 4 4-4" fill="none" stroke="#7fb2e8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>',
+ flex:'<path d="M6 50h52" stroke="#0f2b5b" stroke-width="4.5" stroke-linecap="round"/><circle cx="15" cy="30" r="6" fill="#0f2b5b"/><path d="M21 32h28l5 14" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 34l-4 6 6 5" fill="none" stroke="#d4a017" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 22V9M32 13l4-4 4 4M32 18l4 4 4-4" fill="none" stroke="#7fb2e8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>',
  tro:'<circle cx="38" cy="12" r="6" fill="#0f2b5b"/><path d="M35 20l-8 9 8 5 2 14" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M35 34l-9 8" fill="none" stroke="#1559ad" stroke-width="5.5" stroke-linecap="round"/><path d="M40 23l9 5-4 7" fill="none" stroke="#d4a017" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 22H8M17 30H5M22 38H12" stroke="#7fb2e8" stroke-width="3.5" stroke-linecap="round"/>'
 };
 function icoSVG(id,cls){return `<svg class="${cls||'tico'}" viewBox="0 0 64 64">${ICO[id]||ICO.vel}</svg>`}
@@ -926,7 +939,7 @@ function bind(){
   if($('addAlu')){$('addAlu').addEventListener('click',()=>{const n=$('nuevoAlu').value.trim();if(!n)return;curso().alumnos.push({id:uid(),n:n.toUpperCase()});save();render();toast('Estudiante agregado')})}
   document.querySelectorAll('[id^="verA"]').forEach(b=>b.addEventListener('click',()=>{DB.alumno=b.id.slice(4);save();VIEW='alumno';render()}));
   document.querySelectorAll('[id^="delA"]').forEach(b=>b.addEventListener('click',()=>{const aid=b.id.slice(4);const a=curso().alumnos.find(x=>x.id===aid);if(!a||!confirm('¿Eliminar a '+a.n+'?'))return;curso().alumnos=curso().alumnos.filter(x=>x.id!==aid);DB.tests.forEach(t=>{t.evals=t.evals.filter(e=>e.aid!==aid)});delete DB.adaptaciones[aid];save();render()}));
-  document.querySelectorAll('.tbtn').forEach(b=>b.addEventListener('click',ev=>{ev.preventDefault();TESTSEL=b.dataset.t;document.querySelectorAll('.tbtn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');refrescar()}));
+  document.querySelectorAll('.tbtn').forEach(b=>b.addEventListener('click',ev=>{ev.preventDefault();TESTSEL=b.dataset.t;document.querySelectorAll('.tbtn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');DB.testsel=TESTSEL;save();if(VIEW==='consolidado'){render()}else{refrescar()}}));
   bindFilas();
   if($('evalFecha'))$('evalFecha').addEventListener('change',refrescar);
   if($('pdfCurso'))$('pdfCurso').addEventListener('click',informeCurso);
