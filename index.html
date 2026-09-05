@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Test Físico">
+<meta name="theme-color" content="#0f2b5b">
+<link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAEQ0lEQVR4nO3dwY1TOxiGYXM1e+jj0gFbuoA2qII2bhls6YBCKIFFUIhmMrkk3zk+tv/nWSEhBef4nd+WmMy8efvvpwaP+ufoBTA3AREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQkaejFzCi71++vfZXH75+7LmS8b3xQzZPbkTzGjE1AbWH0rlUPKPSAYXpXCqbUd1L9Ib1bP5qE6k4gXbd7GqjqNwE2ntUVBtFtQLqs7ulGioUUM99rdNQlYD672iRhqoExE5KBHTUMKgwhNYP6NhdXL6h9QNiV4sHNMIAGGEN+1k8IPa2ckDjfOmPs5LNrRwQHQiIiICILBvQaNeO0dazlWUDog8BEREQEQERERARAREREBEBEVk2oNE+nzXaeraybED0ISAiAiKyckDjXDvGWcnmVg6IDhYPaIQv/RHWsJ/FA2Jv6wd07ABYe/y0CgG143Zx+XpakYDYT5WA+g+DCuOn1Qmo9d3RIvW0UgG1Xvtap55WLaC2/+6WqqfV/DG/J5t/UKtaOiflJtDZtvtds55WeQKd+V0ZCQH95rf1PEZAV/h9YX9PQETqXqLZhICICIiIgIgIiIiAiAiIiICICIjI09ELGNfPH/+d//zu/ecDVzIy/5VxxWU6l2T0kiPsDq+FVZmAnrtdiYaecYT9cVccjrMTE+i3e0eLUXQioNYerUFDTUAt60BDpe9AG25/2StR3Qm07fAoO4qKBrTHftdsqGJA++10wYZq3YG6bXCdK1GhCdRzPNQZRVUC6r+jRRoqEdBRe1mhocXvQPkWvnv/eZMXCV9hWCtPoK02Pt/+hUfRshMo3LOr0ezxmrNbMKBdTxzH2TOrHWF7b7Dj7JmlAuozHjR0aZ0jrP8FxZWorRHQgfcSV6Lpj7Bjt9BxNndAIwyA4g1NfISNdgUZbT19TBnQCIPnqmEXtp/5jrCRN6ngcTbZBJrlmJhlnbmZJtBEuxL+WxPNoTkm0MjH1g2TLvsuE0ygebehwpVo8Qk0yFfw7Ou/YYIJ1B59juM8/dnXf8McAT1gtKc/2nq2Mk1Ad23AmLu1wFt4aY470Nn/XiameO5rvIuTaSbQyd7fLtjHGu/iZLKA2uvPd67nvsa7aDMGdNV0z73NueaXJrsDnZ2vEQtsw9TvZdYJtNVH/kYw9XuZdQIxiFknEIMQEBEBEREQEQERERARAREREBEBEREQEQERERARARF5OnoBW/r+5dvRS/hbH75+PHoJ2zCBiAiIiICICIiIgIgIiIiAiAiIiICICIiIgIgIiIiPNhMxgYgIiIiAiAiIiICICIiIgIgIiIiAiAiIiICICIiIgIgIiIiAiAiIiICICIiIgIgIiIiAiAiIiICICIiIgIgIiMgvZpMzjhUu4UYAAAAASUVORK5CYII=">
+<link rel="manifest" href="manifest.json">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%230f2b5b'/><circle cx='90' cy='50' r='20' fill='%23d4a017'/><path d='M60 120 Q90 90 120 120' stroke='%23fff' stroke-width='12' fill='none' stroke-linecap='round'/><path d='M70 140 L110 140' stroke='%23d4a017' stroke-width='10' stroke-linecap='round'/></svg>">
+<title>Test de Condición Física v2</title>
+<style>
+:root{--azul:#0f2b5b;--azul2:#1b427f;--oro:#d4a017;--bg:#f3f5f9;--card:#fff;--linea:#dde3ee;--txt:#16233d;--txt2:#5d6a85;
+  --ok:#1e8e5a;--okbg:#e3f5ec;--med:#b9821a;--medbg:#fdf3dc;--baj:#c2412f;--bajbg:#fbe6e2;--r:14px;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt);
+  font-size:15px;line-height:1.4;padding-bottom:calc(78px + env(safe-area-inset-bottom));}
+header{background:linear-gradient(180deg,var(--azul) 0%,var(--azul2) 100%);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+  position:sticky;top:0;z-index:50;border-bottom:3px solid var(--oro);}
+header .kicker{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:#f6e2ad;font-weight:700}
+header h1{margin:2px 0 0;font-size:18px;font-weight:700;letter-spacing:-.01em}
+header .sub{font-size:12px;color:#c3d2ee;margin-top:2px}
+main{padding:14px 14px 20px;max-width:820px;margin:0 auto;overflow-x:hidden}
+.card{background:var(--card);border:1px solid var(--linea);border-radius:var(--r);padding:14px;margin-bottom:12px;max-width:100%;overflow:hidden}
+.card h2{margin:0 0 10px;font-size:15px;font-weight:700;overflow-wrap:anywhere}
+.card h3{margin:8px 0 6px;font-size:13px;font-weight:700;color:var(--azul)}
+label.f{display:block;font-size:12px;font-weight:600;color:var(--txt2);margin:0 0 4px}
+select,input[type=text],input[type=date],textarea{width:100%;max-width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid var(--linea);border-radius:10px;
+  font-size:16px;font-family:inherit;background:#fff;color:var(--txt);margin-bottom:8px}
+select{max-width:100%;text-overflow:ellipsis;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--txt2) 50%),linear-gradient(135deg,var(--txt2) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px}
+button{font-family:inherit;font-size:15px;border:0;border-radius:10px;padding:11px 14px;background:var(--azul);
+  color:#fff;font-weight:600;cursor:pointer;margin-bottom:8px;width:100%}
+button:active{opacity:.85}
+button.oro{background:var(--oro);color:#3a2a00}
+button.gh{background:transparent;color:var(--baj);border:1px solid var(--linea);opacity:.7}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.alu{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--linea)}
+.alu:last-child{border-bottom:0}
+.alu .n{width:22px;font-size:11px;color:var(--txt2);font-variant-numeric:tabular-nums;font-weight:700}
+.alu .nm{flex:1;font-size:13.5px;line-height:1.25;font-weight:600}
+.val{width:60px;text-align:center;font-weight:700;font-size:14px;padding:8px 4px;margin:0!important}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;min-width:0}
+table{border-collapse:collapse;font-size:12px;width:100%}
+th,td{border:1px solid var(--linea);padding:5px 4px;text-align:center;white-space:nowrap;font-size:11.5px}
+th{background:var(--azul);color:#fff;font-size:10.5px;font-weight:700}
+th.gr{background:var(--oro);color:#3a2a00}
+td.nm{text-align:left;max-width:140px;font-size:11.5px;line-height:1.2;white-space:normal}
+tbody tr:nth-child(even) td{background:#fafbfe}
+.evrow{padding:11px 0;border-bottom:1px solid var(--linea)}
+.evrow:last-child{border-bottom:0}
+.evtop{display:flex;gap:8px;align-items:baseline;margin-bottom:7px}
+.evtop .n{font-size:11px;color:var(--txt2);font-weight:700;min-width:20px;font-variant-numeric:tabular-nums}
+.evtop .nm{font-size:13.5px;font-weight:600;line-height:1.25}
+.evbot{display:flex;gap:9px;align-items:center}
+.testgrp{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.testgrp button{width:100%;padding:11px 6px;margin:0;background:#fafbfc;color:var(--txt2);border:1px solid var(--linea);border-radius:10px;font-size:12.5px;font-weight:700;text-align:center;line-height:1.2}
+.testgrp button.sel{background:var(--azul);color:#fff;border-color:var(--azul)}
+.grupo{display:inline-flex;flex:0 0 auto;border:1px solid var(--linea);border-radius:10px;overflow:hidden}
+.grupo button{width:46px;padding:10px 0;margin:0;border:0;border-right:1px solid var(--linea);background:#fafbfc;color:var(--txt2);font-weight:700;font-size:12.5px;border-radius:0}
+.grupo button:last-child{border-right:0}
+.grupo button.sel{background:var(--azul);color:#fff}
+.evbot input{flex:1;margin:0!important;padding:10px;font-size:15px;text-align:center;font-weight:600}
+.asi1{flex:0 0 62px;width:62px;padding:11px 0;margin:0!important;border:1px solid var(--linea);border-radius:10px;background:#fafbfc;color:var(--txt2);font-weight:700;font-size:14px}
+.lg1{flex:1;padding:11px 4px;margin:0!important;border:1px solid var(--linea);border-radius:10px;
+  background:#fafbfc;color:var(--txt2);font-weight:700;font-size:13px}
+.lg1.l{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.lg1.nl{background:var(--bajbg);color:var(--baj);border-color:var(--baj)}
+.segbox{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.segbox input{width:90px!important;margin:0!important;text-align:center;font-weight:700}
+.segbox span{font-size:12.5px;color:var(--txt2);font-weight:600}
+.asi1.p{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.asi1.a{background:var(--bajbg);color:var(--baj);border-color:var(--baj)}
+.asi1.j{background:var(--medbg);color:var(--med);border-color:var(--med)}
+.asistencia{display:flex;gap:3px;justify-content:center}
+.asistencia button{width:32px;padding:6px 0;font-size:10px;margin:0;border:1px solid var(--linea);background:#fafbfc;color:var(--txt2);font-weight:700}
+.asistencia button.on-P,.asistencia button.on-A,.asistencia button.on-J{background:var(--azul);color:#fff;border-color:var(--azul)}
+#printarea{display:none}
+@media print{
+  body>header,body>nav,body>main,body>.toast{display:none!important}
+  #printarea{display:block!important;padding:0;font-size:11pt;color:#000}
+  #printarea h1{font-size:15pt;margin:0 0 2mm}
+  #printarea .meta{font-size:9pt;color:#444;margin-bottom:4mm}
+  #printarea table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  #printarea th,#printarea td{border:1px solid #999;padding:2mm;text-align:center}
+  #printarea th{background:#e8ecf3}
+  #printarea td.nm{text-align:left}
+  #printarea h3{font-size:11pt;margin:5mm 0 1.5mm}
+  @page{margin:12mm}
+}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));
+  background:var(--txt);color:#fff;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;
+  z-index:99;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:.95}
+.hint{font-size:12px;color:var(--txt2);line-height:1.35;margin-top:8px}
+.lvl{display:inline-block;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700}
+.lvl.a{background:var(--okbg);color:var(--ok)}
+.lvl.m{background:var(--medbg);color:var(--med)}
+.lvl.b{background:var(--bajbg);color:var(--baj)}
+.lvl.x{background:#eef1f6;color:var(--txt2)}
+.delta{font-size:11px;font-weight:700;padding:0 4px}
+.delta.up{color:var(--ok)}
+.delta.down{color:var(--baj)}
+.delta.eq{color:var(--txt2)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.97);
+  backdrop-filter:saturate(180%) blur(12px);border-top:1px solid var(--linea);display:flex;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav a{flex:1;text-align:center;padding:5px 2px;font-size:10px;font-weight:600;color:var(--txt2);
+  text-decoration:none;cursor:pointer}
+nav a .ic{display:block;font-size:19px;line-height:1.35}
+nav a.on{color:var(--azul)}
+@media print{body{padding:0;background:#fff}header,nav{display:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Colegio Juan Pablo Segundo · Los Lagos</div>
+  <h1>Test de Condición Física</h1>
+  <div class="sub">5º a 8º Básico · 2026 · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">13</span></div>
+</header>
+
+<main id="app"></main>
+
+<nav>
+  <a data-v="cursos"><span class="ic">👥</span>Cursos</a>
+  <a data-v="evaluaciones"><span class="ic">📝</span>Evaluaciones</a>
+  <a data-v="alumno"><span class="ic">🏃</span>Alumno</a>
+  <a data-v="adaptaciones"><span class="ic">⚙️</span>Adaptaciones</a>
+  <a data-v="datos"><span class="ic">☁️</span>Datos</a>
+</nav>
+
+<div id="printarea"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const VER='13';
+
+/* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
+setTimeout(()=>{
+  fetch(location.pathname+'?_ac='+Date.now(),{cache:'no-store'})
+    .then(r=>r.ok?r.text():null)
+    .then(t=>{
+      if(!t)return;
+      const m=t.match(/const VER='([^']+)'/);
+      if(m&&m[1]!==VER&&!location.search.includes('v='+m[1])){
+        location.replace(location.pathname+'?v='+m[1]);
+      }
+    }).catch(()=>{});
+},1200);
+
+/* Limpia Service Workers y caches antiguos que servian la version vieja */
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations()
+  .then(rs=>rs.forEach(r=>{const sc=(r.scope||'');if(sc.replace(/https?:\/\/[^/]+/,'')==='/')r.unregister()}))
+  .catch(()=>{});
+  navigator.serviceWorker.register('sw.js').catch(()=>{});}
+if(window.caches){caches.keys().then(ks=>ks.forEach(k=>caches.delete(k))).catch(()=>{})}
+
+const KEY='cjp2_tcf_v2';
+const uid=()=>Math.random().toString(36).slice(2,9);
+const hoy=()=>new Date().toISOString().slice(0,10);
+const num=v=>{if(v===undefined||v===null||v==='')return null;const x=parseFloat(String(v).replace(',','.'));return isNaN(x)?null:x};
+const fmt=(x,d=2)=>x===null?'—':x.toFixed(d).replace('.',',');
+
+const D5=[["ARANZAVE MONTECINOS AMANDA"],["BARRIOS PARRA JOSÉ EMILIANO"],["CHÁVEZ AGUILERA MÍA BELLA"],
+["CORNEJO KUSHNER EMMA ANTONIA"],["CORONADO CARMONA EMILY PASCAL"],["FUENTEALBA LEÓN ALEXA ANAÍS"],
+["GAMBOA ESCOBAR AYLEEN ELIZABETH"],["JARAMILLO CHICO MAITE AINNARA"],["JARAMILLO FLORES ELIZABETH"],
+["JOFRÉ CIFUENTES ANGELO ANTONIO"],["MANCILLA LEIVA DAVID ALONSO"],["OBANDO MOLINA MONSERRAT CRISTEL"],
+["OSORIO MUÑOZ FRANCISCA PAZ"],["PAILAPICHÚN HERNÁNDEZ CATALINA"],["PEÑA ARANEDA EMMA IGNACIA"],
+["PÉREZ SILVA FLORENCIA KATALINA"],["PÉREZ VERA DALMA YHIZEL"],["SÁEZ VILLEGAS JACOB ALEXSANDER"],
+["SALDÍA ORTIZ JORGE MAXIMILIANO"],["SANTIBÁÑEZ SOMOZA MAITE ANYELINA"],["SOTO CEA MAYTE ISABEL"],
+["VÁSQUEZ RIFFO SARAI ELIZABETH"],["SALGADO MARTINA"]];
+
+function seed(){
+  const db={
+    tests:[
+      {id:'vel',n:'Velocidad 20 m',ico:'⚡',tipo:'num',u:'s',mejor:'menor',c1:4.10,c2:4.70,evals:[]},
+      {id:'sal',n:'Salto',ico:'🦘',tipo:'num',u:'cm',mejor:'mayor',c1:19,c2:14,evals:[]},
+      {id:'abd',n:'Abdominales',ico:'💪',tipo:'num',u:'rep',mejor:'mayor',c1:19,c2:15,evals:[]},
+      {id:'pla',n:'Plancha',ico:'🧘',tipo:'logro',op:['L','NL'],seg:30,evals:[]},
+      {id:'flex',n:'Flexiones de brazo',ico:'📏',tipo:'num',u:'rep',mejor:'mayor',c1:15,c2:10,evals:[]},
+      {id:'tro',n:'Trote',ico:'🏃',tipo:'num',u:'rep',mejor:'mayor',c1:100,c2:70,evals:[]}
+    ],
+    cursos:[],adaptaciones:{},activo:null,alumno:null
+  };
+  const c5={id:uid(),n:'5º Básico',alumnos:[]};
+  D5.forEach(f=>{c5.alumnos.push({id:uid(),n:f[0]})});
+  db.cursos.push(c5);
+  ['6º Básico','7º Básico','8º Básico'].forEach(n=>{db.cursos.push({id:uid(),n:n,alumnos:[]})});
+  db.activo=c5.id;
+  db.alumno=c5.alumnos[0].id;
+  return db;
+}
+
+let DB;
+try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){DB=null}
+if(!DB||!DB.cursos){DB=seed()}
+const _pl=DB.tests&&DB.tests.find(t=>t.id==='pla');
+if(_pl){_pl.op=['L','NL'];if(typeof _pl.seg!=='number')_pl.seg=30;
+  (_pl.evals||[]).forEach(e=>{if(e.val==='P')e.val='NL'})}
+const save=(local)=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast('No se pudo guardar')}if(!local)subirPronto()};
+const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600)};
+const curso=()=>DB.cursos.find(c=>c.id===DB.activo)||DB.cursos[0];
+const fcorta=f=>{if(!f)return '—';const p=f.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0].slice(2):f};
+
+function nivel(test,v){const x=num(v);if(x===null)return 'x';if(test.tipo==='logro')return(v==='L')?'a':(v==='P'?'m':'b');if(test.mejor==='menor')return x<=test.c1?'a':(x<=test.c2?'m':'b');return x>=test.c1?'a':(x>=test.c2?'m':'b')}
+
+let VIEW='cursos';let LASTVIEW=null;let TESTSEL=DB.tests[0].id;
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();VIEW=a.dataset.v;render()}));
+
+function render(){
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===VIEW));
+  const v={cursos:vCursos,evaluaciones:vEvaluaciones,alumno:vAlumno,adaptaciones:vAdaptaciones,datos:vDatos};
+  const y=window.scrollY;
+  document.getElementById('app').innerHTML=v[VIEW]?v[VIEW]():'';
+  if(VIEW!==LASTVIEW){window.scrollTo(0,0);LASTVIEW=VIEW}else{window.scrollTo(0,y)}
+  bind();
+}
+
+function vCursos(){
+  const c=curso();
+  let h=`<div class="card"><h2>Cursos</h2><select id="selCurso">${DB.cursos.map(x=>`<option value="${x.id}" ${x.id===c.id?'selected':''}>${x.n} · ${x.alumnos.length} estudiantes</option>`).join('')}</select></div>`;
+  h+=`<div class="card"><h2>Estudiantes</h2>`;
+  if(!c.alumnos.length)h+=`<div style="text-align:center;color:var(--txt2);padding:20px">Sin estudiantes</div>`;
+  c.alumnos.forEach((a,i)=>{h+=`<div class="alu"><div class="n">${i+1}</div><div class="nm">${a.n}</div><button class="gh" style="width:60px;font-size:12px;margin:0" id="verA${a.id}">Ver</button><button class="gh" style="width:50px;font-size:12px;margin:0" id="delA${a.id}">✕</button></div>`});
+  h+=`<div class="row"><input type="text" id="nuevoAlu" placeholder="Nombre completo" style="margin-bottom:0"><button class="oro" id="addAlu" style="flex:0 0 88px;margin-bottom:0">Agregar</button></div></div>`;
+  return h;
+}
+
+function vEvaluaciones(){
+  const c=curso();
+  if(!c.alumnos.length)return `<div class="card"><div style="text-align:center;color:var(--txt2);padding:20px">Agrega estudiantes primero</div></div>`;
+  let h=`<div class="card"><h2>Registrar evaluación</h2><label class="f">Test</label><div class="testgrp">${DB.tests.map(t=>`<button type="button" class="tbtn ${t.id===TESTSEL?'sel':''}" data-t="${t.id}">${t.ico} ${t.n}</button>`).join('')}</div><div id="extra">${extraHTML()}</div><label class="f">Fecha</label><input type="date" id="evalFecha" value="${hoy()}"></div>`;
+  h+=`<div class="card"><h2>Estudiantes</h2><div id="filas">${filasHTML()}</div>`;
+  h+=`<div class="hint" id="pista">${pistaHTML()}</div>`;
+  h+=`<button type="button" class="oro" id="pdfCurso">📄 Informe PDF del curso</button></div>`;
+  return h;
+}
+
+function extraHTML(){
+  const t=testAct();
+  if(t.tipo!=='logro')return '';
+  return `<label class="f">Tiempo que debe mantener</label><div class="segbox"><input type="text" id="segObj" inputmode="numeric" value="${t.seg||30}"><span>segundos</span></div>`;
+}
+
+function pistaHTML(){
+  const t=testAct();
+  const base='Asistencia: — → P (presente) → A (ausente) → J (justificado).';
+  if(t.tipo==='logro')return base+' Resultado: — → L (logrado) → NL (no logrado). Todo se guarda solo.';
+  return base+' Todo se guarda solo.';
+}
+
+function filasHTML(){
+  const c=curso(),t=testAct(),f=fechaAct();
+  let h='';
+  c.alumnos.forEach((a,i)=>{
+    const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
+    const as=e&&e.asist?e.asist:'', vl=e&&e.val?e.val:'';
+    h+=`<div class="evrow"><div class="evtop"><div class="n">${i+1}</div><div class="nm">${a.n}</div></div>`;
+    h+=`<div class="evbot"><button type="button" class="asi1 ${as.toLowerCase()}" id="asi${a.id}" data-a="${a.id}" data-sel="${as}">${as||'—'}</button>`;
+    if(t.tipo==='logro'){
+      h+=`<button type="button" class="lg1 ${vl.toLowerCase()}" id="val${a.id}" data-a="${a.id}" data-sel="${vl}">${vl||'—'}</button>`;
+    }else{
+      h+=`<input type="text" id="val${a.id}" placeholder="valor" inputmode="decimal" value="${vl}">`;
+    }
+    h+=`</div></div>`;
+  });
+  return h;
+}
+
+function refrescar(){
+  const fx=document.getElementById('filas');if(!fx)return;
+  fx.innerHTML=filasHTML();
+  const ex=document.getElementById('extra');if(ex)ex.innerHTML=extraHTML();
+  const pi=document.getElementById('pista');if(pi)pi.innerHTML=pistaHTML();
+  bindFilas();
+}
+
+function vAlumno(){
+  const c=curso();
+  if(!c.alumnos.find(a=>a.id===DB.alumno))DB.alumno=c.alumnos[0].id;
+  const a=c.alumnos.find(x=>x.id===DB.alumno);
+  let h=`<div class="card"><h2>Estudiante</h2><select id="selAlu">${c.alumnos.map((x,i)=>`<option value="${x.id}" ${x.id===a.id?'selected':''}>${i+1}. ${x.n}</option>`).join('')}</select></div>`;
+  h+=`<div class="card"><h2>${a.n}</h2>`;
+  DB.tests.forEach(t=>{
+    const evals=t.evals.filter(e=>e.aid===a.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+    h+=`<h3>${t.ico} ${t.n}</h3>`;
+    if(!evals.length){h+=`<div style="font-size:12px;color:var(--txt2)">Sin registro</div>`;return}
+    h+=`<div class="tw"><table><thead><tr><th>Fecha</th><th>Asist.</th><th>Valor</th><th>Nivel</th><th>Δ</th></tr></thead><tbody>`;
+    evals.forEach((e,i)=>{
+      const niv=nivel(t,e.val);
+      const diff=i<evals.length-1?(num(e.val)-num(evals[i+1].val)):null;
+      const d=diff!==null?`<td class="delta ${diff>0?'up':(diff<0?'down':'eq')}">${diff>0?'+':''}${fmt(diff,0)}</td>`:'<td>—</td>';
+      h+=`<tr><td>${fcorta(e.fecha)}</td><td>${e.asist||'—'}</td><td>${e.val||'—'}</td><td><span class="lvl ${niv}">${{a:'A',m:'M',b:'B',x:'—'}[niv]}</span></td>${d}</tr>`;
+    });
+    h+=`</tbody></table></div>`;
+  });
+  h+=`<button type="button" class="oro" id="pdfAlumno" style="margin-top:10px">📄 Informe PDF del estudiante</button>`;
+  h+=`</div>`;
+  return h;
+}
+
+function vAdaptaciones(){
+  const c=curso();
+  if(!c.alumnos.length)return `<div class="card"><div style="text-align:center;color:var(--txt2);padding:20px">Sin estudiantes</div></div>`;
+  let h=`<div class="card"><h2>Banco de adaptaciones</h2><label class="f">Estudiante</label><select id="selAluAd">${c.alumnos.map((a,i)=>`<option value="${a.id}">${i+1}. ${a.n}</option>`).join('')}</select><label class="f">Test</label><select id="selTestAd">${DB.tests.map(t=>`<option value="${t.id}">${t.n}</option>`).join('')}</select><label class="f">Descripción de adaptación</label><textarea id="descAdapt" rows="3" placeholder="Ej: Menos repeticiones (15 en lugar de 20)&#10;Menos tiempo de trote&#10;Pausas permitidas" style="margin-bottom:8px"></textarea><button class="oro" id="addAdapt">Agregar adaptación</button></div>`;
+  h+=`<div class="card"><h2>Adaptaciones registradas</h2>`;
+  Object.entries(DB.adaptaciones).forEach(([aid,tests])=>{
+    const a=c.alumnos.find(x=>x.id===aid);
+    if(!a)return;
+    Object.entries(tests).forEach(([tid,desc])=>{
+      const t=DB.tests.find(x=>x.id===tid);
+      h+=`<div style="padding:10px;border-bottom:1px solid var(--linea)"><div style="font-size:12px;font-weight:700">${a.n}</div><div style="font-size:11px;color:var(--txt2)"><b>${t.n}:</b> ${desc}</div><button class="gh" style="width:50px;padding:4px;font-size:11px;margin-top:4px;margin-bottom:0" id="delAd${aid}-${tid}">Eliminar</button></div>`;
+    });
+  });
+  h+=`</div>`;
+  return h;
+}
+
+/* ---------- Sincronizacion con Supabase ---------- */
+const SKEY='cjp2_tcf_sync';
+let SY={url:'',key:''};
+try{SY=JSON.parse(localStorage.getItem(SKEY))||SY}catch(e){}
+let SYNCEST='';
+let _tmr=null;
+const hora=()=>new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+
+function syncListo(){return !!(SY.url&&SY.key)}
+function cab(){return {'apikey':SY.key,'Authorization':'Bearer '+SY.key,'Content-Type':'application/json'}}
+function estado(t){SYNCEST=t;const e=document.getElementById('syEstado');if(e)e.textContent=t}
+
+function bajar(silencioso){
+  if(!syncListo())return Promise.resolve(false);
+  estado('Buscando cambios...');
+  return fetch(SY.url+'/rest/v1/test_fisico?id=eq.principal&select=datos,actualizado',{headers:cab()})
+    .then(r=>r.ok?r.json():Promise.reject(r.status))
+    .then(j=>{
+      if(!j.length){estado('Sin datos en la nube todavia');return false}
+      const rem=j[0];
+      if(DB._act&&new Date(rem.actualizado)<=new Date(DB._act)){estado('Al dia · '+hora());return false}
+      const d=rem.datos;
+      if(d&&d.cursos){d._act=rem.actualizado;DB=d;save(true);estado('Actualizado desde la nube · '+hora());
+        if(!silencioso)render();return true}
+      return false;
+    })
+    .catch(e=>{estado('Sin conexion'+(e?' ('+e+')':''));return false});
+}
+
+function subir(){
+  if(!syncListo())return Promise.resolve(false);
+  estado('Guardando en la nube...');
+  const ahora=new Date().toISOString();
+  DB._act=ahora;
+  return fetch(SY.url+'/rest/v1/test_fisico',{
+    method:'POST',
+    headers:Object.assign({},cab(),{'Prefer':'resolution=merge-duplicates'}),
+    body:JSON.stringify({id:'principal',datos:DB,actualizado:ahora})
+  }).then(r=>{
+    if(!r.ok)return Promise.reject(r.status);
+    estado('Guardado en la nube · '+hora());return true;
+  }).catch(e=>{estado('No se pudo guardar ('+e+')');return false});
+}
+
+function subirPronto(){if(!syncListo())return;clearTimeout(_tmr);_tmr=setTimeout(subir,1500)}
+
+/* ---------- Registro de evaluaciones ---------- */
+function testAct(){return DB.tests.find(t=>t.id===TESTSEL)||DB.tests[0]}
+function fechaAct(){const f=document.getElementById('evalFecha');return f?f.value:hoy()}
+
+function upsert(aid,campo,valor){
+  const t=testAct(),f=fechaAct();
+  if(!t.evals)t.evals=[];
+  let e=t.evals.find(x=>x.aid===aid&&x.fecha===f);
+  if(!e){e={aid:aid,fecha:f,asist:'',val:''};t.evals.push(e)}
+  e[campo]=valor;
+  if(!e.asist&&!e.val){t.evals=t.evals.filter(x=>x!==e)}
+  save();
+}
+
+/* ---------- Informes PDF ---------- */
+function imprimir(html){
+  const p=document.getElementById('printarea');
+  p.innerHTML=html;
+  window.print();
+  setTimeout(()=>{p.innerHTML=''},600);
+}
+
+function informeCurso(){
+  const t=testAct(),f=fechaAct(),c=curso();
+  let h=`<h1>${t.n}${t.tipo==='logro'&&t.seg?' — '+t.seg+' segundos':''}</h1><div class="meta">${c.n} · Fecha: ${f} · Colegio Juan Pablo Segundo · Prof. Felipe Sanhueza Cardenas</div>`;
+  h+=`<table><thead><tr><th style="width:8%">N°</th><th style="text-align:left">Estudiante</th><th style="width:14%">Asist.</th><th style="width:16%">Resultado</th></tr></thead><tbody>`;
+  let np=0,na=0,nj=0;
+  c.alumnos.forEach((a,i)=>{
+    const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
+    const as=e&&e.asist?e.asist:'—';
+    if(as==='P')np++;else if(as==='A')na++;else if(as==='J')nj++;
+    h+=`<tr><td>${i+1}</td><td class="nm">${a.n}</td><td>${as}</td><td>${e&&e.val?e.val:'—'}</td></tr>`;
+  });
+  h+=`</tbody></table><div class="meta" style="margin-top:4mm">Presentes: ${np} · Ausentes: ${na} · Justificados: ${nj} · Total: ${c.alumnos.length}</div>`;
+  imprimir(h);
+}
+
+function informeAlumno(){
+  const c=curso(),a=c.alumnos.find(x=>x.id===DB.alumno);
+  let h=`<h1>${a.n}</h1><div class="meta">${c.n} · Informe de condicion fisica · Colegio Juan Pablo Segundo · Prof. Felipe Sanhueza Cardenas</div>`;
+  DB.tests.forEach(t=>{
+    const ev=(t.evals||[]).filter(e=>e.aid===a.id).sort((x,y)=>new Date(y.fecha)-new Date(x.fecha));
+    h+=`<h3>${t.n}${t.u?' ('+t.u+')':''}${t.tipo==='logro'&&t.seg?' — '+t.seg+' segundos':''}</h3>`;
+    if(!ev.length){h+=`<div style="font-size:9.5pt;color:#666">Sin registro</div>`;return}
+    h+=`<table><thead><tr><th>Fecha</th><th>Asistencia</th><th>Resultado</th><th>Diferencia</th></tr></thead><tbody>`;
+    ev.forEach((e,i)=>{
+      const df=(t.tipo!=='logro'&&i<ev.length-1)?(num(e.val)-num(ev[i+1].val)):null;
+      h+=`<tr><td>${fcorta(e.fecha)}</td><td>${e.asist||'—'}</td><td>${e.val||'—'}</td><td>${df===null||isNaN(df)?'—':(df>0?'+':'')+fmt(df,1)}</td></tr>`;
+    });
+    h+=`</tbody></table>`;
+  });
+  const ad=DB.adaptaciones[a.id];
+  if(ad&&Object.keys(ad).length){
+    h+=`<h3>Adaptaciones</h3><table><tbody>`;
+    Object.entries(ad).forEach(([tid,d])=>{const t=DB.tests.find(x=>x.id===tid);h+=`<tr><td class="nm" style="width:32%">${t?t.n:tid}</td><td class="nm">${d}</td></tr>`});
+    h+=`</tbody></table>`;
+  }
+  imprimir(h);
+}
+
+function vDatos(){
+  const ok=syncListo();
+  let h=`<div class="card"><h2>Sincronización</h2>`;
+  h+=`<div class="hint" style="margin:0 0 10px">${ok?'Activa. Los cambios se guardan en la nube y aparecen en tus otros dispositivos.':'Sin configurar. Ahora los datos viven solo en este dispositivo.'}</div>`;
+  h+=`<div style="padding:9px 12px;background:#f3f5f9;border-radius:10px;font-size:12.5px;font-weight:600;color:var(--txt2);margin-bottom:12px" id="syEstado">${SYNCEST||(ok?'Listo':'Falta la clave')}</div>`;
+  h+=`<label class="f">URL del proyecto</label><input type="text" id="syUrl" placeholder="https://xxxxx.supabase.co" value="${SY.url||''}">`;
+  h+=`<label class="f">Clave anon (publishable)</label><input type="text" id="syKey" placeholder="sb_publishable_..." value="${SY.key||''}">`;
+  h+=`<button type="button" class="oro" id="sySave">Activar sincronización</button>`;
+  h+=`<div class="row"><button type="button" id="syUp">Subir ahora</button><button type="button" id="syDown">Traer ahora</button></div>`;
+  h+=`</div>`;
+  h+=`<div class="card"><h2>Cómo usarla en varios dispositivos</h2><div class="hint">1. Pega aquí la URL y la clave, y toca Activar.<br>2. Haz lo mismo en la tablet y en el computador, con los mismos datos.<br>3. Listo: lo que registres en uno aparece en los otros al abrir la app.<br><br>La clave está en Supabase → Settings → API. Es la clave pública (anon), no la secreta.</div></div>`;
+  return h;
+}
+
+
+function bindFilas(){
+  const CICLO=['','P','A','J'];
+  document.querySelectorAll('.asi1').forEach(b=>b.addEventListener('click',ev=>{
+    ev.preventDefault();
+    const i=CICLO.indexOf(b.dataset.sel||''),v=CICLO[(i+1)%4];
+    b.dataset.sel=v;b.textContent=v||'—';
+    b.classList.remove('p','a','j');if(v)b.classList.add(v.toLowerCase());
+    upsert(b.dataset.a,'asist',v);
+  }));
+  const LOGRO=['','L','NL'];
+  document.querySelectorAll('.lg1').forEach(b=>b.addEventListener('click',ev=>{
+    ev.preventDefault();
+    const i=LOGRO.indexOf(b.dataset.sel||''),v=LOGRO[(i+1)%3];
+    b.dataset.sel=v;b.textContent=v||'—';
+    b.classList.remove('l','nl');if(v)b.classList.add(v.toLowerCase());
+    upsert(b.dataset.a,'val',v);
+  }));
+  document.querySelectorAll('.evbot input').forEach(inp=>{
+    const g=()=>upsert(inp.id.slice(3),'val',inp.value.trim());
+    inp.addEventListener('input',g);inp.addEventListener('blur',g);
+  });
+  const sg=document.getElementById('segObj');
+  if(sg)sg.addEventListener('input',()=>{const n=parseInt(sg.value,10);testAct().seg=isNaN(n)?0:n;save()});
+}
+
+function bind(){
+  const $=id=>document.getElementById(id);
+  if($('selCurso'))$('selCurso').addEventListener('change',e=>{DB.activo=e.target.value;save();render()});
+  if($('addAlu')){$('addAlu').addEventListener('click',()=>{const n=$('nuevoAlu').value.trim();if(!n)return;curso().alumnos.push({id:uid(),n:n.toUpperCase()});save();render();toast('Estudiante agregado')})}
+  document.querySelectorAll('[id^="verA"]').forEach(b=>b.addEventListener('click',()=>{DB.alumno=b.id.slice(4);save();VIEW='alumno';render()}));
+  document.querySelectorAll('[id^="delA"]').forEach(b=>b.addEventListener('click',()=>{const aid=b.id.slice(4);const a=curso().alumnos.find(x=>x.id===aid);if(!a||!confirm('¿Eliminar a '+a.n+'?'))return;curso().alumnos=curso().alumnos.filter(x=>x.id!==aid);DB.tests.forEach(t=>{t.evals=t.evals.filter(e=>e.aid!==aid)});delete DB.adaptaciones[aid];save();render()}));
+  document.querySelectorAll('.tbtn').forEach(b=>b.addEventListener('click',ev=>{ev.preventDefault();TESTSEL=b.dataset.t;document.querySelectorAll('.tbtn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');refrescar()}));
+  bindFilas();
+  if($('evalFecha'))$('evalFecha').addEventListener('change',refrescar);
+  if($('pdfCurso'))$('pdfCurso').addEventListener('click',informeCurso);
+  if($('pdfAlumno'))$('pdfAlumno').addEventListener('click',informeAlumno);
+  
+  if($('selAlu'))$('selAlu').addEventListener('change',e=>{DB.alumno=e.target.value;save();render()});
+  if($('addAdapt')){$('addAdapt').addEventListener('click',()=>{const aid=$('selAluAd').value;const tid=$('selTestAd').value;const desc=$('descAdapt').value.trim();if(!desc)return;if(!DB.adaptaciones[aid])DB.adaptaciones[aid]={};DB.adaptaciones[aid][tid]=desc;save();render();toast('Adaptación guardada')})}
+  document.querySelectorAll('[id^="delAd"]').forEach(b=>b.addEventListener('click',()=>{const [aid,tid]=b.id.slice(5).split('-');if(DB.adaptaciones[aid])delete DB.adaptaciones[aid][tid];save();render()}));
+  if($('sySave')){$('sySave').addEventListener('click',()=>{
+    const u=$('syUrl').value.trim().replace(/\/+$/,''), k=$('syKey').value.trim();
+    if(!u||!k){toast('Faltan la URL o la clave');return}
+    SY={url:u,key:k};
+    try{localStorage.setItem(SKEY,JSON.stringify(SY))}catch(e){}
+    estado('Probando conexión...');
+    bajar(true).then(()=>subir()).then(ok=>{toast(ok?'Sincronización activa':'Revisa la URL y la clave')});
+  })}
+  if($('syUp'))$('syUp').addEventListener('click',()=>subir().then(ok=>toast(ok?'Datos subidos':'No se pudo subir')));
+  if($('syDown'))$('syDown').addEventListener('click',()=>bajar().then(ok=>toast(ok?'Datos actualizados':'Sin cambios nuevos')));
+}
+
+render();
+if(syncListo())bajar(false);
+</script>
+</body>
+</html>
