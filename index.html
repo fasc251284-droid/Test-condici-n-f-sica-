@@ -123,7 +123,7 @@ nav a.on{color:var(--azul)}
 <header>
   <div class="kicker">Colegio Juan Pablo Segundo · Los Lagos</div>
   <h1>Test de Condición Física</h1>
-  <div class="sub">5º a 8º Básico · 2026 · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">13</span></div>
+  <div class="sub">5º a 8º Básico · 2026 · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">14</span></div>
 </header>
 
 <main id="app"></main>
@@ -140,7 +140,7 @@ nav a.on{color:var(--azul)}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='13';
+const VER='14';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -335,11 +335,19 @@ function syncListo(){return !!(SY.url&&SY.key)}
 function cab(){return {'apikey':SY.key,'Authorization':'Bearer '+SY.key,'Content-Type':'application/json'}}
 function estado(t){SYNCEST=t;const e=document.getElementById('syEstado');if(e)e.textContent=t}
 
+function detalle(r){
+  return r.text().then(t=>{
+    let m='';
+    try{const j=JSON.parse(t);m=j.message||j.hint||j.details||t}catch(e){m=t}
+    return Promise.reject(r.status+': '+(m||'sin detalle').slice(0,90));
+  }).catch(e=>Promise.reject(typeof e==='string'?e:r.status));
+}
+
 function bajar(silencioso){
   if(!syncListo())return Promise.resolve(false);
   estado('Buscando cambios...');
   return fetch(SY.url+'/rest/v1/test_fisico?id=eq.principal&select=datos,actualizado',{headers:cab()})
-    .then(r=>r.ok?r.json():Promise.reject(r.status))
+    .then(r=>r.ok?r.json():detalle(r))
     .then(j=>{
       if(!j.length){estado('Sin datos en la nube todavia');return false}
       const rem=j[0];
@@ -349,7 +357,7 @@ function bajar(silencioso){
         if(!silencioso)render();return true}
       return false;
     })
-    .catch(e=>{estado('Sin conexion'+(e?' ('+e+')':''));return false});
+    .catch(e=>{estado('Error al leer · '+e);return false});
 }
 
 function subir(){
@@ -362,9 +370,9 @@ function subir(){
     headers:Object.assign({},cab(),{'Prefer':'resolution=merge-duplicates'}),
     body:JSON.stringify({id:'principal',datos:DB,actualizado:ahora})
   }).then(r=>{
-    if(!r.ok)return Promise.reject(r.status);
+    if(!r.ok)return detalle(r);
     estado('Guardado en la nube · '+hora());return true;
-  }).catch(e=>{estado('No se pudo guardar ('+e+')');return false});
+  }).catch(e=>{estado('Error al guardar · '+e);return false});
 }
 
 function subirPronto(){if(!syncListo())return;clearTimeout(_tmr);_tmr=setTimeout(subir,1500)}
@@ -433,7 +441,7 @@ function vDatos(){
   const ok=syncListo();
   let h=`<div class="card"><h2>Sincronización</h2>`;
   h+=`<div class="hint" style="margin:0 0 10px">${ok?'Activa. Los cambios se guardan en la nube y aparecen en tus otros dispositivos.':'Sin configurar. Ahora los datos viven solo en este dispositivo.'}</div>`;
-  h+=`<div style="padding:9px 12px;background:#f3f5f9;border-radius:10px;font-size:12.5px;font-weight:600;color:var(--txt2);margin-bottom:12px" id="syEstado">${SYNCEST||(ok?'Listo':'Falta la clave')}</div>`;
+  h+=`<div style="padding:9px 12px;background:#f3f5f9;border-radius:10px;font-size:12.5px;font-weight:600;color:var(--txt2);margin-bottom:12px;word-break:break-word;line-height:1.35" id="syEstado">${SYNCEST||(ok?'Listo':'Falta la clave')}</div>`;
   h+=`<label class="f">URL del proyecto</label><input type="text" id="syUrl" placeholder="https://xxxxx.supabase.co" value="${SY.url||''}">`;
   h+=`<label class="f">Clave anon (publishable)</label><input type="text" id="syKey" placeholder="sb_publishable_..." value="${SY.key||''}">`;
   h+=`<button type="button" class="oro" id="sySave">Activar sincronización</button>`;
