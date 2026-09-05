@@ -252,7 +252,7 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">26</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">28</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -270,7 +270,7 @@ nav a.on svg{stroke-width:2.1}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='26';
+const VER='28';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -311,7 +311,7 @@ const D5=[["ARANZAVE MONTECINOS AMANDA"],["BARRIOS PARRA JOSÉ EMILIANO"],["CHÁ
 function seed(){
   const db={
     tests:[
-      {id:'vel',n:'Velocidad 20 m',ico:'⚡',tipo:'num',u:'s',mejor:'menor',c1:4.10,c2:4.70,evals:[]},
+      {id:'vel',n:'Velocidad',ico:'⚡',tipo:'num',u:'s',mejor:'menor',mts:20,c1:4.10,c2:4.70,evals:[]},
       {id:'sal',n:'Salto',ico:'🦘',tipo:'num',u:'cm',mejor:'mayor',c1:19,c2:14,evals:[]},
       {id:'abd',n:'Abdominales',ico:'💪',tipo:'num',u:'rep',mejor:'mayor',c1:19,c2:15,evals:[]},
       {id:'pla',n:'Plancha',ico:'🧘',tipo:'logro',op:['L','NL'],seg:30,evals:[]},
@@ -332,6 +332,9 @@ function seed(){
 let DB;
 try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){DB=null}
 if(!DB||!DB.cursos){DB=seed()}
+const _ve=DB.tests&&DB.tests.find(t=>t.id==='vel');
+if(_ve){if(typeof _ve.mts!=='number'){const m=/(\d+)\s*m/.exec(_ve.n);_ve.mts=m?parseInt(m[1],10):20}
+  _ve.n='Velocidad';_ve.u='s'}
 const _pl=DB.tests&&DB.tests.find(t=>t.id==='pla');
 if(_pl){_pl.op=['L','NL'];if(typeof _pl.seg!=='number')_pl.seg=30;
   (_pl.evals||[]).forEach(e=>{if(e.val==='P')e.val='NL'})}
@@ -419,7 +422,7 @@ function vInicio(){
     <div class="paso"><div class="num">4</div><div class="tx"><b>Imprimes el informe</b>Del curso completo o de un estudiante, listo para guardar como PDF.</div></div>
   </div>`;
 
-  h+=`<div class="card"><h2>Los seis tests</h2>${DB.tests.map(t=>`<div class="paso"><div class="num" style="background:#eaf2fd;width:34px;height:34px;flex:0 0 34px">${icoSVG(t.id,'tico')}</div><div class="tx"><b>${t.n}</b>${t.tipo==='logro'?'Logrado o no logrado · '+(t.seg||30)+' segundos':'Resultado en '+(t.u||'número')}</div></div>`).join('')}</div>`;
+  h+=`<div class="card"><h2>Los seis tests</h2>${DB.tests.map(t=>`<div class="paso"><div class="num" style="background:#eaf2fd;width:34px;height:34px;flex:0 0 34px">${icoSVG(t.id,'tico')}</div><div class="tx"><b>${nomTest(t)}</b>${t.tipo==='logro'?'Logrado o no logrado · '+(t.seg||30)+' segundos':'Resultado en '+nomUni(t.u||'número')}</div></div>`).join('')}</div>`;
 
   h+=`<div class="hint" style="text-align:center;padding:4px 0 8px">Colegio Juan Pablo Segundo · Los Lagos</div>`;
   return h;
@@ -435,15 +438,15 @@ function vEvaluaciones(){
   let h=`<div class="card top">
     <div class="thero"><div class="txt">
       <div class="chip"><i></i>En evaluación</div>
-      <h1 class="titulo">${t.n}</h1>
-      <div class="meta">${c.alumnos.length} estudiantes${t.u?' · resultado en '+t.u:''}${t.tipo==='logro'?' · logrado o no logrado':''}</div>
+      <h1 class="titulo">${nomTest(t)}</h1>
+      <div class="meta">${c.alumnos.length} estudiantes${t.u?' · resultado en '+nomUni(t.u):''}${t.tipo==='logro'?' · logrado o no logrado':''}</div>
       <div class="codigo">EF ${t.id.toUpperCase()} · ${c.n} · 2026</div>
     </div><div class="tbig">${icoSVG(t.id)}</div></div>
     <div id="extra">${extraHTML()}</div>
     <div class="fecharow"><label for="evalFecha">Fecha</label><input type="date" id="evalFecha" value="${hoy()}"></div>
   </div>`;
 
-  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${icoSVG(x.id,'tico ti')}<span>${x.n}</span></button>`).join('')}</div></div>`;
+  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${icoSVG(x.id,'tico ti')}<span>${nomTest(x)}</span></button>`).join('')}</div></div>`;
 
   h+=`<div class="mgrid" id="mgrid">
     <div class="mcard m-az"><div class="lab">Registrados</div><div class="val">${m.con}/${m.total}</div></div>
@@ -462,8 +465,11 @@ function vEvaluaciones(){
 
 function extraHTML(){
   const t=testAct();
-  if(t.tipo!=='logro')return '';
-  return `<label class="f">Tiempo que debe mantener</label><div class="segbox"><input type="text" id="segObj" inputmode="numeric" value="${t.seg||30}"><span>segundos</span></div>`;
+  if(t.tipo==='logro')
+    return `<label class="f">Tiempo que debe mantener</label><div class="segbox"><input type="text" id="segObj" inputmode="numeric" value="${t.seg||30}"><span>segundos</span></div>`;
+  if(t.id==='vel')
+    return `<label class="f">Distancia a recorrer</label><div class="segbox"><input type="text" id="mtsObj" inputmode="numeric" value="${t.mts||20}"><span>metros · se cronometra en segundos</span></div>`;
+  return '';
 }
 
 function pistaHTML(){
@@ -508,9 +514,9 @@ function pintarCabTest(){
   const ic=document.querySelector('.tbig');
   if(ic)ic.innerHTML=icoSVG(t.id);
   const ti=document.querySelector('.thero .titulo');
-  if(ti)ti.textContent=t.n;
+  if(ti)ti.textContent=nomTest(t);
   const me=document.querySelector('.thero .meta');
-  if(me)me.textContent=`${c.alumnos.length} estudiantes`+(t.u?' · resultado en '+t.u:'')+(t.tipo==='logro'?' · logrado o no logrado':'');
+  if(me)me.textContent=`${c.alumnos.length} estudiantes`+(t.u?' · resultado en '+nomUni(t.u):'')+(t.tipo==='logro'?' · logrado o no logrado':'');
   const co=document.querySelector('.thero .codigo');
   if(co)co.textContent=`EF ${t.id.toUpperCase()} · ${c.n} · 2026`;
 }
@@ -534,7 +540,7 @@ function vAlumno(){
   h+=`<div class="card"><h2>${a.n}</h2>`;
   DB.tests.forEach(t=>{
     const evals=t.evals.filter(e=>e.aid===a.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-    h+=`<h3>${t.ico} ${t.n}</h3>`;
+    h+=`<h3>${t.ico} ${nomTest(t)}</h3>`;
     if(!evals.length){h+=`<div style="font-size:12px;color:var(--txt2)">Sin registro</div>`;return}
     h+=`<div class="tw"><table><thead><tr><th>Fecha</th><th>Asist.</th><th>Valor</th><th>Nivel</th><th>Δ</th></tr></thead><tbody>`;
     evals.forEach((e,i)=>{
@@ -577,8 +583,8 @@ function vConsolidado(){
   if(!c.alumnos.length)return `<div class="card"><h2>${c.n} no tiene estudiantes</h2><div class="hint">Agrégalos en la pestaña Cursos para poder comparar evaluaciones.</div><button type="button" class="cta" id="goCur" style="margin-top:12px"><span class="ico">👥</span>Ir a Cursos<span class="arrow">›</span></button></div>`;
   let h=`<div class="card top">
     <div class="thead"><div class="tround">${icoSVG(t.id)}</div>
-      <div class="txt"><h1 class="titulo" style="font-size:22px">${t.n}</h1>
-      <div class="meta">${c.n} · ${fs.length} ${fs.length===1?'evaluación':'evaluaciones'}${t.u?' · en '+t.u:''}${t.tipo==='logro'?' · logrado / no logrado':''}</div></div>
+      <div class="txt"><h1 class="titulo" style="font-size:22px">${nomTest(t)}</h1>
+      <div class="meta">${c.n} · ${fs.length} ${fs.length===1?'evaluación':'evaluaciones'}${t.u?' · en '+nomUni(t.u):''}${t.tipo==='logro'?' · logrado / no logrado':''}</div></div>
     </div>`;
 
   // metricas del consolidado
@@ -599,7 +605,7 @@ function vConsolidado(){
   </div>`;
   h+=`<div class="hint">Cada columna es una fecha de aplicación. La flecha compara con la evaluación anterior del mismo estudiante.</div></div>`;
 
-  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${icoSVG(x.id,'tico ti')}<span>${x.n}</span></button>`).join('')}</div></div>`;
+  h+=`<div class="card"><h2>Elegir test</h2><div class="testgrp">${DB.tests.map(x=>`<button type="button" class="tbtn ${x.id===TESTSEL?'sel':''}" data-t="${x.id}">${icoSVG(x.id,'tico ti')}<span>${nomTest(x)}</span></button>`).join('')}</div></div>`;
 
   if(!fs.length){
     h+=`<div class="card"><h2>Sin evaluaciones</h2><div class="hint">Todavía no hay registros de este test. Ve a Evaluar y anota los primeros resultados.</div></div>`;
@@ -635,14 +641,14 @@ function vConsolidado(){
 function vAdaptaciones(){
   const c=curso();
   if(!c.alumnos.length)return `<div class="card"><div style="text-align:center;color:var(--txt2);padding:20px">Sin estudiantes</div></div>`;
-  let h=`<div class="card"><h2>Banco de adaptaciones</h2><label class="f">Estudiante</label><select id="selAluAd">${c.alumnos.map((a,i)=>`<option value="${a.id}">${i+1}. ${a.n}</option>`).join('')}</select><label class="f">Test</label><select id="selTestAd">${DB.tests.map(t=>`<option value="${t.id}">${t.n}</option>`).join('')}</select><label class="f">Descripción de adaptación</label><textarea id="descAdapt" rows="3" placeholder="Ej: Menos repeticiones (15 en lugar de 20)&#10;Menos tiempo de trote&#10;Pausas permitidas" style="margin-bottom:8px"></textarea><button class="oro" id="addAdapt">Agregar adaptación</button></div>`;
+  let h=`<div class="card"><h2>Banco de adaptaciones</h2><label class="f">Estudiante</label><select id="selAluAd">${c.alumnos.map((a,i)=>`<option value="${a.id}">${i+1}. ${a.n}</option>`).join('')}</select><label class="f">Test</label><select id="selTestAd">${DB.tests.map(t=>`<option value="${t.id}">${nomTest(t)}</option>`).join('')}</select><label class="f">Descripción de adaptación</label><textarea id="descAdapt" rows="3" placeholder="Ej: Menos repeticiones (15 en lugar de 20)&#10;Menos tiempo de trote&#10;Pausas permitidas" style="margin-bottom:8px"></textarea><button class="oro" id="addAdapt">Agregar adaptación</button></div>`;
   h+=`<div class="card"><h2>Adaptaciones registradas</h2>`;
   Object.entries(DB.adaptaciones).forEach(([aid,tests])=>{
     const a=c.alumnos.find(x=>x.id===aid);
     if(!a)return;
     Object.entries(tests).forEach(([tid,desc])=>{
       const t=DB.tests.find(x=>x.id===tid);
-      h+=`<div style="padding:10px;border-bottom:1px solid var(--linea)"><div style="font-size:12px;font-weight:700">${a.n}</div><div style="font-size:11px;color:var(--txt2)"><b>${t.n}:</b> ${desc}</div><button class="gh" style="width:50px;padding:4px;font-size:11px;margin-top:4px;margin-bottom:0" id="delAd${aid}-${tid}">Eliminar</button></div>`;
+      h+=`<div style="padding:10px;border-bottom:1px solid var(--linea)"><div style="font-size:12px;font-weight:700">${a.n}</div><div style="font-size:11px;color:var(--txt2)"><b>${t?nomTest(t):tid}:</b> ${desc}</div><button class="gh" style="width:50px;padding:4px;font-size:11px;margin-top:4px;margin-bottom:0" id="delAd${aid}-${tid}">Eliminar</button></div>`;
     });
   });
   h+=`</div>`;
@@ -721,6 +727,11 @@ const ICO={
 };
 function icoSVG(id,cls){return `<svg class="${cls||'tico'}" viewBox="0 0 64 64">${ICO[id]||ICO.vel}</svg>`}
 
+
+const UNI={s:'segundos',cm:'centímetros',m:'metros',rep:'repeticiones',min:'minutos'};
+function nomUni(u){return UNI[u]||u}
+
+function nomTest(t){return t.id==='vel'?('Velocidad '+(t.mts||20)+' m'):t.n}
 
 function testAct(){return DB.tests.find(t=>t.id===TESTSEL)||DB.tests[0]}
 function fechaAct(){const f=document.getElementById('evalFecha');return f?f.value:hoy()}
@@ -811,7 +822,7 @@ function cuerpoConsolidado(){
   });
   const prom=n?(t.tipo==='logro'?Math.round(sum/n*100)+'%':(sum/n).toFixed(1).replace('.',',')):'—';
 
-  let h=membrete('Consolidado · '+t.n, `${c.n} · ${fs.length} ${fs.length===1?'evaluación':'evaluaciones'}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}${t.u?' · resultado en '+t.u:''}`);
+  let h=membrete('Consolidado · '+nomTest(t), `${c.n} · ${fs.length} ${fs.length===1?'evaluación':'evaluaciones'}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}${t.u?' · resultado en '+nomUni(t.u):''}`);
   h+=`<table class="doc-m"><tr>
     <td><div class="v">${prom}</div><div class="l">${t.tipo==='logro'?'Logro del curso':'Promedio del curso'}</div></td>
     <td><div class="v">${comp?Math.round(mej/comp*100)+'%':'—'}</div><div class="l">Estudiantes que mejoraron</div></td>
@@ -849,7 +860,7 @@ function cuerpoEstudiante(){
     <td><div class="v">${c.n}</div><div class="l">Curso</div></td></tr></table>`;
   DB.tests.forEach(t=>{
     const ev=(t.evals||[]).filter(e=>e.aid===a.id).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
-    h+=`<h3 class="d">${t.n}${t.u?' · '+t.u:''}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}</h3>`;
+    h+=`<h3 class="d">${nomTest(t)}${t.u?' · '+nomUni(t.u):''}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}</h3>`;
     if(!ev.length){h+=`<div style="font-size:9.5pt;color:#5d6a85">Sin registro</div>`;return}
     h+=`<table class="d"><thead><tr><th>Fecha</th><th>Asistencia</th><th>Resultado</th><th>Avance</th></tr></thead><tbody>`;
     ev.forEach((e,i)=>{
@@ -870,7 +881,7 @@ function cuerpoEstudiante(){
 function informeCurso(){
   const t=testAct(),f=fechaAct(),c=curso();
   const m=metricas();
-  let h=membrete(t.n, `${c.n} · Aplicado el ${fcorta(f)}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}${t.u?' · resultado en '+t.u:''}`);
+  let h=membrete(nomTest(t), `${c.n} · Aplicado el ${fcorta(f)}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}${t.u?' · resultado en '+nomUni(t.u):''}`);
   h+=`<table class="doc-m"><tr>
     <td><div class="v">${t.tipo==='logro'?(m.logro===null?'—':m.logro+'%'):(m.prom===null?'—':fmt(m.prom,1).replace('.',','))}</div><div class="l">${t.tipo==='logro'?'Logro del curso':'Promedio del curso'}</div></td>
     <td><div class="v">${m.con}/${m.total}</div><div class="l">Registrados</div></td>
@@ -924,6 +935,10 @@ function bindFilas(){
   });
   const sg=document.getElementById('segObj');
   if(sg)sg.addEventListener('input',()=>{const n=parseInt(sg.value,10);testAct().seg=isNaN(n)?0:n;save()});
+  const mt=document.getElementById('mtsObj');
+  if(mt)mt.addEventListener('input',()=>{const n=parseInt(mt.value,10);testAct().mts=isNaN(n)?0:n;save();
+    const ti=document.querySelector('.thero .titulo');if(ti)ti.textContent=nomTest(testAct());
+    const bt=document.querySelector('.tbtn[data-t="'+testAct().id+'"] span');if(bt)bt.textContent=nomTest(testAct());});
 }
 
 function pintarCabecera(){
@@ -952,15 +967,15 @@ function bind(){
   if($('pdfAlumno'))$('pdfAlumno').addEventListener('click',informeAlumno);
   if($('docAlumno'))$('docAlumno').addEventListener('click',()=>{const a=curso().alumnos.find(x=>x.id===DB.alumno);bajarWord('Informe '+a.n,cuerpoEstudiante())});
   if($('pdfCons'))$('pdfCons').addEventListener('click',()=>imprimir(cuerpoConsolidado()));
-  if($('docCons'))$('docCons').addEventListener('click',()=>bajarWord('Consolidado '+testAct().n+' '+curso().n,cuerpoConsolidado()));
+  if($('docCons'))$('docCons').addEventListener('click',()=>bajarWord('Consolidado '+nomTest(testAct())+' '+curso().n,cuerpoConsolidado()));
   if($('docCurso'))$('docCurso').addEventListener('click',()=>{
     const t=testAct(),f=fechaAct(),c=curso(),m=metricas();
-    let h=membrete(t.n,`${c.n} · Aplicado el ${fcorta(f)}`);
+    let h=membrete(nomTest(t),`${c.n} · Aplicado el ${fcorta(f)}`);
     h+=`<table class="d"><thead><tr><th style="width:9%">N°</th><th style="text-align:left">Estudiante</th><th style="width:14%">Asistencia</th><th style="width:16%">Resultado</th></tr></thead><tbody>`;
     c.alumnos.forEach((a,i)=>{const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
       h+=`<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td><td>${e&&e.asist?e.asist:'—'}</td><td>${e&&e.val?e.val:'—'}</td></tr>`});
     h+=`</tbody></table>`+piePagina();
-    bajarWord(t.n+' '+c.n,h);
+    bajarWord(nomTest(t)+' '+c.n,h);
   });
   
   if($('selAlu'))$('selAlu').addEventListener('change',e=>{DB.alumno=e.target.value;save();render()});
