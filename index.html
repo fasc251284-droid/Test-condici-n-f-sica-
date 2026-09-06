@@ -294,7 +294,7 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">35</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">37</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -312,7 +312,7 @@ nav a.on svg{stroke-width:2.1}
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='35';
+const VER='37';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -572,6 +572,18 @@ function pintarMetricas(){
   const fo=document.getElementById('foco');if(fo)fo.innerHTML=focoHTML();
   const g=document.getElementById('mgrid');if(!g)return;
   g.innerHTML=cuadros(metricas(),testAct());
+}
+
+function pintarCabTest(){
+  const t=testAct(),c=curso();
+  const ic=document.querySelector('.tbig');
+  if(ic)ic.innerHTML=icoSVG(t.id);
+  const ti=document.querySelector('.thero .titulo');
+  if(ti)ti.textContent=nomTest(t);
+  const me=document.querySelector('.thero .meta');
+  if(me)me.textContent=`${c.alumnos.length} estudiantes`+(t.u?' · resultado en '+nomUni(t.u):'')+(t.tipo==='logro'?' · logrado o no logrado':'');
+  const co=document.querySelector('.thero .codigo');
+  if(co)co.textContent=`EF ${t.id.toUpperCase()} · ${c.n} · 2026`;
 }
 
 function refrescar(){
@@ -903,49 +915,65 @@ function imprimir(html){
 }
 
 function membrete(titulo,sub){
-  return `<div class="doc-head">
+  return `<div class="doc-band">
     <div class="doc-esc"></div>
-    <div class="doc-tit"><div class="doc-col">Colegio Juan Pablo Segundo · Los Lagos</div>
-      <div class="doc-h1">${titulo}</div>
-      <div class="doc-sub">${sub}</div></div>
-  </div><div class="doc-linea"></div>`;
+    <div class="doc-inst"><div class="doc-col">Colegio Juan Pablo II</div>
+      <div class="doc-li">Los Lagos · Educación Física y Salud</div>
+      <div class="doc-li">Prof. Felipe Sanhueza Cárdenas</div></div>
+  </div>
+  <div class="doc-tit"><div class="doc-h1">${titulo}</div><div class="doc-sub">${sub}</div></div>`;
 }
+
+function panel(items){
+  return `<div class="doc-panel">`+items.map((it,i)=>
+    `<span class="${i===0?'p1':'pn'}">${it}</span>`).join('')+`</div>`;
+}
+
+function seccion(titulo,html){
+  return `<div class="doc-sec">${titulo}</div>${html}`;
+}
+
 function piePagina(){
-  return `<div class="doc-pie">Educación Física y Salud · Prof. Felipe Sanhueza Cárdenas · Emitido el ${fcorta(hoy())}</div>`;
+  return `<div class="doc-pie">Colegio Juan Pablo II · Educación Física y Salud · Prof. Felipe Sanhueza Cárdenas · Emitido el ${fcorta(hoy())}</div>`;
 }
+
 const ESTILO_DOC = `
- body{font-family:Calibri,Arial,sans-serif;color:#16233d;font-size:11pt}
- .doc-head{display:table;width:100%;margin-bottom:6pt}
- .doc-esc{display:table-cell;width:54px;vertical-align:middle}
- .doc-tit{display:table-cell;vertical-align:middle;padding-left:10px}
- .doc-col{font-size:8.5pt;letter-spacing:.08em;text-transform:uppercase;color:#5d6a85;font-weight:bold}
- .doc-h1{font-size:17pt;font-weight:bold;color:#0a4d78;margin:2pt 0}
- .doc-sub{font-size:10pt;color:#5d6a85}
- .doc-linea{height:3px;background:#00a8f5;margin-bottom:12pt}
- .doc-m{width:100%;border-collapse:collapse;margin-bottom:12pt}
- .doc-m td{width:33%;text-align:center;border:1px solid #bfe4fa;background:#eaf7fe;padding:8pt}
- .doc-m .v{font-size:16pt;font-weight:bold;color:#0a4d78}
- .doc-m .l{font-size:8pt;letter-spacing:.06em;text-transform:uppercase;color:#5d6a85}
- table.d{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:10pt}
- table.d th{background:#0a4d78;color:#fff;padding:6pt 4pt;font-size:8.5pt;
-   letter-spacing:.04em;text-transform:uppercase;border:1px solid #0a4d78}
- table.d td{border:1px solid #c7d3e6;padding:5pt 4pt;text-align:center}
+ body{font-family:Calibri,Arial,sans-serif;color:#1f2d3d;font-size:10.5pt;margin:0}
+ .doc-band{background:#2e5d8a;color:#fff;padding:10pt 12pt;border-bottom:4px solid #d9a53b;
+   display:table;width:100%;box-sizing:border-box}
+ .doc-esc{display:table-cell;width:56px;vertical-align:middle}
+ .doc-inst{display:table-cell;vertical-align:middle;padding-left:11pt}
+ .doc-col{font-size:14pt;font-weight:bold;line-height:1.2}
+ .doc-li{font-size:8.5pt;color:#cfe0ef;line-height:1.35}
+ .doc-tit{border-left:4px solid #d9a53b;background:#f7fafc;padding:8pt 11pt;margin:10pt 0}
+ .doc-h1{font-size:14pt;font-weight:bold;color:#2e5d8a}
+ .doc-sub{font-size:9.5pt;color:#5d6a7a;margin-top:2pt}
+ .doc-panel{background:#fdf6e6;border:1px solid #ead9b0;padding:7pt 11pt;margin-bottom:11pt;
+   font-size:9.5pt;color:#5d6a7a}
+ .doc-panel .p1{font-weight:bold;color:#a8801f;margin-right:16pt}
+ .doc-panel .pn{margin-right:16pt}
+ .doc-sec{background:#2e5d8a;color:#fff;font-size:8.5pt;font-weight:bold;letter-spacing:.06em;
+   text-transform:uppercase;padding:5pt 9pt;margin-top:11pt}
+ table.d{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:9pt}
+ table.d th{background:#eaf1f8;color:#2e5d8a;padding:5pt 4pt;font-size:8.5pt;font-weight:bold;
+   letter-spacing:.04em;text-transform:uppercase;border:1px solid #cfdcea}
+ table.d td{border:1px solid #dbe4ee;padding:4.5pt 4pt;text-align:center}
  table.d td.nm{text-align:left}
- table.d tr:nth-child(even) td{background:#f5f8fd}
- .up{color:#12855a;font-weight:bold}.down{color:#c2412f;font-weight:bold}.eq{color:#93a1ba}
- h3.d{font-size:11.5pt;color:#0a4d78;margin:12pt 0 4pt;border-bottom:1px solid #00a8f5;padding-bottom:3pt}
- .doc-pie{margin-top:14pt;padding-top:6pt;border-top:1px solid #c7d3e6;
-   font-size:8.5pt;color:#5d6a85;text-align:center}
+ table.d tr:nth-child(even) td{background:#f4f8fc}
+ table.d tr.total td{background:#fdf6e6;font-weight:bold;color:#a8801f}
+ .up{color:#1e7d52;font-weight:bold}.down{color:#b93f2d;font-weight:bold}.eq{color:#93a1ba}
+ .doc-pie{margin-top:14pt;padding-top:6pt;border-top:1px solid #cfdcea;
+   font-size:8pt;color:#7c8899;text-align:center}
 `;
 
 function escudoDoc(){
   const img=document.getElementById('logoImg');
-  return `<img src="${img?img.src:''}" style="width:52px;height:auto">`;
+  return `<img src="${img?img.src:''}" style="width:58px;height:auto">`;
 }
 
 function docHTML(cuerpo){
   return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="utf-8"><style>@page{size:A4;margin:2cm}${ESTILO_DOC}</style></head>
+<head><meta charset="utf-8"><style>${ESTILO_DOC}</style></head>
 <body>${cuerpo.replace('<div class="doc-esc"></div>','<div class="doc-esc">'+escudoDoc()+'</div>')}</body></html>`;
 }
 
@@ -969,16 +997,23 @@ function cuerpoConsolidado(){
   });
   const prom=n?(t.tipo==='logro'?Math.round(sum/n*100)+'%':(sum/n).toFixed(1).replace('.',',')):'—';
 
-  let h=membrete('Consolidado · '+nomTest(t), `${c.n} · ${fs.length} ${fs.length===1?'evaluación':'evaluaciones'}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}${t.u?' · resultado en '+nomUni(t.u):''}`);
-  h+=`<table class="doc-m"><tr>
-    <td><div class="v">${prom}</div><div class="l">${t.tipo==='logro'?'Logro del curso':'Promedio del curso'}</div></td>
-    <td><div class="v">${comp?Math.round(mej/comp*100)+'%':'—'}</div><div class="l">Estudiantes que mejoraron</div></td>
-    <td><div class="v">${c.alumnos.length}</div><div class="l">Estudiantes</div></td></tr></table>`;
-  h+=`<table class="d"><thead><tr><th style="text-align:left">N° · Estudiante</th>`;
-  fs.forEach((f,i)=>h+=`<th>${i+1}. ${fcorta(f)}</th>`);
+  let h=membrete('Consolidado · '+nomTest(t),
+    `${c.n} · ${fs.length} ${fs.length===1?'evaluación':'evaluaciones'}${t.u?' · resultado en '+nomUni(t.u):''}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}`);
+  h+=tira([
+    (t.tipo==='logro'?'Logro del curso: ':'Promedio del curso: ')+prom,
+    'Mejoraron: '+(comp?mej+' de '+comp:'—'),
+    'Estudiantes: '+c.alumnos.length
+  ]);
+
+  h+=seccion('Fechas de aplicación');
+  h+=`<table class="d"><tbody><tr>${fs.map((f,i)=>`<td><b>${i+1}</b><br>${fcorta(f)}</td>`).join('')||'<td>Sin evaluaciones</td>'}</tr></tbody></table>`;
+
+  h+=seccion('Comparativa por estudiante');
+  h+=`<table class="d"><thead><tr><th style="width:7%">N°</th><th style="text-align:left">Estudiante</th>`;
+  fs.forEach((f,i)=>h+=`<th>${i+1}</th>`);
   h+=`<th>Avance</th></tr></thead><tbody>`;
   c.alumnos.forEach((a,i)=>{
-    h+=`<tr><td class="nm">${String(i+1).padStart(2,'0')} · ${a.n}</td>`;
+    h+=`<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td>`;
     const vals=[];
     fs.forEach(f=>{
       const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
@@ -989,68 +1024,135 @@ function cuerpoConsolidado(){
     const m=con.length>1?mejora(t,con[0],con[con.length-1]):null;
     h+=`<td class="${m?m.c:'eq'}">${m?m.t:'—'}</td></tr>`;
   });
-  h+=`</tbody></table>`+piePagina();
-  return h;
+  h+=`<tr class="tot"><td colspan="${2+fs.length}">${t.tipo==='logro'?'LOGRO DEL CURSO':'PROMEDIO DEL CURSO'}</td><td>${prom}</td></tr>`;
+  h+=`</tbody></table>`;
+  h+=seccion('Cómo leer esta tabla');
+  h+=`<table class="d"><tbody><tr>
+    <td><b class="up">verde</b><br>mejoró</td><td><b class="down">rojo</b><br>retrocedió</td>
+    <td><b>=</b><br>sin cambio</td><td><b>A / J</b><br>ausente o justificado</td></tr></tbody></table>`;
+  return h+piePagina();
 }
 
 function cuerpoEstudiante(){
   const c=curso(),a=c.alumnos.find(x=>x.id===DB.alumno);
-  let h=membrete(a.n, `${c.n} · Informe individual de condición física`);
-  let tot=0,mejs=0;
-  DB.tests.forEach(t=>{
+  const resumen=DB.tests.map(t=>{
     const ev=(t.evals||[]).filter(e=>e.aid===a.id).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
-    if(ev.length>1){tot++;const m=mejora(t,ev[0].val,ev[ev.length-1].val);if(m&&m.c==='up')mejs++}
+    const con=ev.filter(e=>e.val);
+    return {t,ev,con,m:con.length>1?mejora(t,con[0].val,con[con.length-1].val):null};
   });
-  h+=`<table class="doc-m"><tr>
-    <td><div class="v">${DB.tests.filter(t=>(t.evals||[]).some(e=>e.aid===a.id)).length}/${DB.tests.length}</div><div class="l">Tests con registro</div></td>
-    <td><div class="v">${tot?mejs+'/'+tot:'—'}</div><div class="l">Tests en que mejoró</div></td>
-    <td><div class="v">${c.n}</div><div class="l">Curso</div></td></tr></table>`;
-  // resumen de una fila por test
-  h+=`<h3 class="d">Resumen general</h3>`;
+  const conReg=resumen.filter(r=>r.con.length).length;
+  const compar=resumen.filter(r=>r.m);
+  const subieron=compar.filter(r=>r.m.c==='up').length;
+  const jornadas=(()=>{const f={};DB.tests.forEach(t=>(t.evals||[]).forEach(e=>{if(e.aid===a.id)f[e.fecha]=1}));return Object.keys(f).length})();
+
+  let h=membrete(a.n, `Informe individual de condición física · ${c.n} · 2026`);
+  h+=tira([
+    'Tests con registro: '+conReg+' de '+DB.tests.length,
+    'Mejoró en: '+(compar.length?subieron+' de '+compar.length:'—'),
+    'Jornadas: '+jornadas
+  ]);
+
+  h+=seccion('Resumen general');
   h+=`<table class="d"><thead><tr><th style="text-align:left">Test</th><th>Primera</th><th>Última</th><th>Avance</th><th>Registros</th></tr></thead><tbody>`;
-  DB.tests.forEach(t=>{
-    const con=(t.evals||[]).filter(e=>e.aid===a.id&&e.val).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
-    if(!con.length){h+=`<tr><td class="nm">${nomTest(t)}</td><td colspan="4" style="color:#8b96ab">Sin registro</td></tr>`;return}
-    const m=con.length>1?mejora(t,con[0].val,con[con.length-1].val):null;
-    h+=`<tr><td class="nm">${nomTest(t)}${t.u?' ('+nomUni(t.u)+')':''}</td><td>${con[0].val}</td><td><b>${con[con.length-1].val}</b></td><td class="${m?m.c:'eq'}">${m?m.t:'—'}</td><td>${con.length}</td></tr>`;
+  resumen.forEach(r=>{
+    if(!r.con.length){h+=`<tr><td class="nm">${nomTest(r.t)}</td><td colspan="4" style="color:#93a1ae">Sin registro</td></tr>`;return}
+    h+=`<tr><td class="nm">${nomTest(r.t)}${r.t.u?' ('+nomUni(r.t.u)+')':''}</td>
+      <td>${r.con[0].val}</td><td><b>${r.con[r.con.length-1].val}</b></td>
+      <td class="${r.m?r.m.c:'eq'}">${r.m?r.m.t:'—'}</td><td>${r.con.length}</td></tr>`;
   });
   h+=`</tbody></table>`;
 
-  DB.tests.forEach(t=>{
-    const ev=(t.evals||[]).filter(e=>e.aid===a.id).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
-    if(!ev.length)return;
-    h+=`<h3 class="d">${nomTest(t)}${t.u?' · '+nomUni(t.u):''}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}</h3>`;
+  resumen.filter(r=>r.ev.length).forEach(r=>{
+    h+=seccion(nomTest(r.t)+(r.t.u?' · '+nomUni(r.t.u):'')+(r.t.tipo==='logro'&&r.t.seg?' · '+r.t.seg+' segundos':''));
     h+=`<table class="d"><thead><tr><th>Fecha</th><th>Asistencia</th><th>Resultado</th><th>Avance</th></tr></thead><tbody>`;
-    ev.forEach((e,i)=>{
-      const m=i>0?mejora(t,ev[i-1].val,e.val):null;
-      h+=`<tr><td>${fcorta(e.fecha)}</td><td>${e.asist||'—'}</td><td>${e.val||'—'}</td><td class="${m?m.c:'eq'}">${m?m.t:'—'}</td></tr>`;
+    r.ev.forEach((e,i)=>{
+      const m=i>0?mejora(r.t,r.ev[i-1].val,e.val):null;
+      h+=`<tr><td>${fcorta(e.fecha)}</td><td>${e.asist||'—'}</td><td><b>${e.val||'—'}</b></td>
+          <td class="${m?m.c:'eq'}">${m?m.t:'—'}</td></tr>`;
     });
     h+=`</tbody></table>`;
   });
+
   const ad=DB.adaptaciones[a.id];
   if(ad&&Object.keys(ad).length){
-    h+=`<h3 class="d">Adaptaciones</h3><table class="d"><tbody>`;
-    Object.entries(ad).forEach(([tid,d])=>{const t=DB.tests.find(x=>x.id===tid);h+=`<tr><td class="nm" style="width:32%">${t?t.n:tid}</td><td class="nm">${d}</td></tr>`});
+    h+=seccion('Adaptaciones');
+    h+=`<table class="d"><tbody>`;
+    Object.entries(ad).forEach(([tid,d])=>{const t=DB.tests.find(x=>x.id===tid);
+      h+=`<tr><td class="nm" style="width:32%"><b>${t?nomTest(t):tid}</b></td><td class="nm">${d}</td></tr>`});
     h+=`</tbody></table>`;
   }
   return h+piePagina();
 }
 
-function informeCurso(){
-  const t=testAct(),f=fechaAct(),c=curso();
+function tablaCurso(t,f,c){
   const m=metricas();
-  let h=membrete(nomTest(t), `${c.n} · Aplicado el ${fcorta(f)}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}${t.u?' · resultado en '+nomUni(t.u):''}`);
-  h+=`<table class="doc-m"><tr>
-    <td><div class="v">${t.tipo==='logro'?(m.logro===null?'—':m.logro+'%'):(m.prom===null?'—':fmt(m.prom,1).replace('.',','))}</div><div class="l">${t.tipo==='logro'?'Logro del curso':'Promedio del curso'}</div></td>
-    <td><div class="v">${m.con}/${m.total}</div><div class="l">Registrados</div></td>
-    <td><div class="v">${m.aus+m.just}</div><div class="l">Sin evaluar</div></td></tr></table>`;
-  h+=`<table class="d"><thead><tr><th style="width:9%">N°</th><th style="text-align:left">Estudiante</th><th style="width:14%">Asistencia</th><th style="width:16%">Resultado</th></tr></thead><tbody>`;
+  let h=seccion('Registro del curso · '+fcorta(f));
+  h+=`<table class="d"><thead><tr><th style="width:9%">N°</th><th style="text-align:left">Estudiante</th>
+      <th style="width:16%">Asistencia</th><th style="width:18%">Resultado</th></tr></thead><tbody>`;
   c.alumnos.forEach((a,i)=>{
     const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
-    h+=`<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td><td>${e&&e.asist?e.asist:'—'}</td><td>${e&&e.val?e.val:'—'}</td></tr>`;
+    h+=`<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td>
+        <td>${e&&e.asist?e.asist:'—'}</td><td>${e&&e.val?e.val:'—'}</td></tr>`;
   });
-  h+=`</tbody></table><div style="font-size:9.5pt;color:#5d6a85">Presentes: ${m.pres} · Ausentes: ${m.aus} · Justificados: ${m.just} · Total: ${m.total}</div>`;
-  imprimir(h+piePagina());
+  const res = t.tipo==='logro'
+    ? (m.logro===null?'—':m.logro+'% de logro')
+    : (m.prom===null?'—':fmt(m.prom,1).replace('.',',')+' '+nomUni(t.u));
+  h+=`<tr class="tot"><td colspan="3">PROMEDIO DEL CURSO</td><td>${res}</td></tr>`;
+  h+=`</tbody></table>`;
+  return h;
+}
+
+function cuerpoCurso(){
+  const t=testAct(),f=fechaAct(),c=curso(),m=metricas();
+  let h=membrete(nomTest(t), `${c.n} · Aplicado el ${fcorta(f)}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}`);
+  h+=tira([
+    (t.tipo==='logro'?'Logro del curso: ':'Promedio del curso: ')+(t.tipo==='logro'?(m.logro===null?'—':m.logro+'%'):(m.prom===null?'—':fmt(m.prom,1).replace('.',','))),
+    'Registrados: '+m.con+' de '+m.total,
+    'Ausencias: '+m.aus+' sin justificar · '+m.just+' justificadas'
+  ]);
+  h+=seccion('Marcas de la planilla');
+  h+=`<table class="d"><tbody><tr>
+    <td><b>P</b><br>presente</td><td><b>A</b><br>ausente</td><td><b>J</b><br>justificado</td>
+    <td><b>—</b><br>sin evaluar</td>${t.tipo==='logro'?'<td><b>L / NL</b><br>logrado o no</td>':''}</tr></tbody></table>`;
+  h+=tablaCurso(t,f,c);
+  return h+piePagina();
+}
+
+function informeCurso(){imprimir(cuerpoCurso())}
+
+function cuerpoCurso(){
+  const t=testAct(),f=fechaAct(),c=curso(),m=metricas();
+  let h=membrete(nomTest(t), `Registro de aplicación · ${c.n} · ${fcorta(f)}`);
+  const prom = t.tipo==='logro'
+    ? (m.logro===null?'—':m.logro+'% de logro')
+    : (m.prom===null?'—':fmt(m.prom,1).replace('.',',')+' '+nomUni(t.u));
+  h+=panel([
+    (t.tipo==='logro'?'Logro del curso: ':'Promedio del curso: ')+prom,
+    `Registrados: ${m.con} de ${m.total}`,
+    `Ausencias: ${m.aus} sin justificar · ${m.just} justificadas`
+  ]);
+  h+=seccion('Condiciones de aplicación',
+    `<table class="d"><tbody>
+      <tr><td class="nm" style="width:30%"><b>Test</b></td><td class="nm">${nomTest(t)}</td></tr>
+      <tr><td class="nm"><b>Unidad de medida</b></td><td class="nm">${nomUni(t.u)||'—'}${t.tipo==='logro'?' (logrado / no logrado)':''}</td></tr>
+      ${t.tipo==='logro'&&t.seg?`<tr><td class="nm"><b>Tiempo exigido</b></td><td class="nm">${t.seg} segundos</td></tr>`:''}
+      ${t.id==='vel'&&t.mts?`<tr><td class="nm"><b>Distancia</b></td><td class="nm">${t.mts} metros</td></tr>`:''}
+      <tr><td class="nm"><b>Fecha de aplicación</b></td><td class="nm">${fcorta(f)}</td></tr>
+    </tbody></table>`);
+  h+=seccion('Marcas de la planilla',
+    `<table class="d"><thead><tr><th>P</th><th>A</th><th>J</th><th>—</th></tr></thead>
+     <tbody><tr><td>presente</td><td>ausente</td><td>justificado</td><td>sin evaluar</td></tr></tbody></table>`);
+  h+=seccion(`${c.n} · ${fcorta(f)}`,
+    `<table class="d"><thead><tr><th style="width:8%">N°</th><th style="text-align:left">Estudiante</th>
+      <th style="width:15%">Asistencia</th><th style="width:18%">Resultado</th></tr></thead><tbody>`+
+    c.alumnos.map((a,i)=>{
+      const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
+      return `<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td>
+        <td>${e&&e.asist?e.asist:'—'}</td><td><b>${e&&e.val?e.val:'—'}</b></td></tr>`;
+    }).join('')+
+    `<tr class="total"><td></td><td class="nm">${t.tipo==='logro'?'LOGRO DEL CURSO':'PROMEDIO DEL CURSO'}</td>
+      <td>${m.pres} presentes</td><td>${prom}</td></tr></tbody></table>`);
+  return h+piePagina();
 }
 
 function informeAlumno(){imprimir(cuerpoEstudiante())}
@@ -1132,15 +1234,8 @@ function bind(){
   if($('docAlumno'))$('docAlumno').addEventListener('click',()=>{const a=curso().alumnos.find(x=>x.id===DB.alumno);bajarWord('Informe '+a.n,cuerpoEstudiante())});
   if($('pdfCons'))$('pdfCons').addEventListener('click',()=>imprimir(cuerpoConsolidado()));
   if($('docCons'))$('docCons').addEventListener('click',()=>bajarWord('Consolidado '+nomTest(testAct())+' '+curso().n,cuerpoConsolidado()));
-  if($('docCurso'))$('docCurso').addEventListener('click',()=>{
-    const t=testAct(),f=fechaAct(),c=curso(),m=metricas();
-    let h=membrete(nomTest(t),`${c.n} · Aplicado el ${fcorta(f)}`);
-    h+=`<table class="d"><thead><tr><th style="width:9%">N°</th><th style="text-align:left">Estudiante</th><th style="width:14%">Asistencia</th><th style="width:16%">Resultado</th></tr></thead><tbody>`;
-    c.alumnos.forEach((a,i)=>{const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
-      h+=`<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td><td>${e&&e.asist?e.asist:'—'}</td><td>${e&&e.val?e.val:'—'}</td></tr>`});
-    h+=`</tbody></table>`+piePagina();
-    bajarWord(nomTest(t)+' '+c.n,h);
-  });
+  if($('docCurso'))$('docCurso').addEventListener('click',()=>bajarWord(nomTest(testAct())+' '+curso().n,cuerpoCurso()));
+
   
   if($('abrirSel'))$('abrirSel').addEventListener('click',()=>{
     const p=$('picker');const ab=p.style.display==='none';
