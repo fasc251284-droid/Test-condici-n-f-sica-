@@ -244,42 +244,26 @@ header{background:linear-gradient(135deg,#00a8f5 0%,#0089c9 48%,#0a4d78 100%);co
 .pkvacio{padding:16px;text-align:center;color:var(--txt2);font-size:13px}
 
 /* ===== Navegacion inferior ===== */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.97);
-  backdrop-filter:saturate(180%) blur(12px);border-top:1px solid #e6eaf2;display:flex;
-  padding:7px 2px calc(7px + env(safe-area-inset-bottom))}
-nav a{flex:1;text-align:center;padding:3px 1px;font-size:10.5px;font-weight:600;color:#8b96ab;
-  text-decoration:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-nav a svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;
-  stroke-linecap:round;stroke-linejoin:round}
-nav a.on{color:var(--azul2)}
-nav a.on svg{stroke-width:2.1}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:60;
+  background:linear-gradient(180deg,rgba(255,255,255,.94) 0%,#fff 55%);
+  backdrop-filter:saturate(180%) blur(14px);
+  border-top:1px solid #dceefb;box-shadow:0 -6px 18px rgba(10,77,120,.07);
+  display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
+nav a{flex:1;position:relative;text-align:center;padding:2px 1px;font-size:10px;font-weight:700;
+  color:#8fa3b5;text-decoration:none;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:4px;letter-spacing:.005em;transition:color .18s ease}
+nav a .cap{width:46px;height:31px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+  background:transparent;transition:background .2s ease,transform .2s ease}
+nav a svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.75;
+  stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .18s ease}
+nav a:active .cap{transform:scale(.92)}
+nav a.on{color:#0089c9}
+nav a.on .cap{background:linear-gradient(135deg,#d7f0fd 0%,#e9f8ff 100%);
+  box-shadow:inset 0 0 0 1px #bfe6fa}
+nav a.on svg{stroke-width:2.15}
+nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+  width:26px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,#00a8f5,#0089c9)}
 
-@media print{
-  body>header,body>nav,body>main,body>.toast{display:none!important}
-  #printarea{display:block!important;padding:0;font-size:11pt;color:#000}
-  #printarea h1{font-size:15pt;margin:0 0 2mm}
-  #printarea .meta{font-size:9pt;color:#444;margin-bottom:4mm}
-  #printarea table{width:100%;border-collapse:collapse;font-size:9.5pt}
-  #printarea th,#printarea td{border:1px solid #999;padding:2mm;text-align:center}
-  #printarea th{background:#e8ecf3}
-  #printarea td.nm{text-align:left}
-  #printarea h3{font-size:11pt;margin:5mm 0 1.5mm}
-  @page{margin:12mm}
-}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));
-  background:var(--txt);color:#fff;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;
-  z-index:99;opacity:0;transition:opacity .2s;pointer-events:none}
-.toast.show{opacity:.95}
-.hint{font-size:12px;color:var(--txt2);line-height:1.35;margin-top:8px}
-.lvl{display:inline-block;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700}
-.lvl.a{background:var(--okbg);color:var(--ok)}
-.lvl.m{background:var(--medbg);color:var(--med)}
-.lvl.b{background:var(--bajbg);color:var(--baj)}
-.lvl.x{background:#eef1f6;color:var(--txt2)}
-.delta{font-size:11px;font-weight:700;padding:0 4px}
-.delta.up{color:var(--ok)}
-.delta.down{color:var(--baj)}
-.delta.eq{color:var(--txt2)}
 @media print{body{padding:0;background:#fff}header,nav{display:none!important}}
 </style>
 </head>
@@ -294,25 +278,25 @@ nav a.on svg{stroke-width:2.1}
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">37</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">40</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
 <main id="app"></main>
 
 <nav>
-  <a data-v="inicio"><svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5"/><path d="M6 9.8V20h12V9.8"/><path d="M10 20v-5h4v5"/></svg>Inicio</a>
-  <a data-v="evaluaciones"><svg viewBox="0 0 24 24"><path d="M5 4h9l5 5v11a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M14 4v5h5"/><path d="M8 13h8M8 17h5"/></svg>Evaluaciones</a>
-  <a data-v="consolidado"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h11M4 18h7"/></svg>Consolidado</a>
-  <a data-v="alumno"><svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.6"/><path d="M12 9v6"/><path d="M8 11l4-2 4 2"/><path d="M9 21l3-6 3 6"/></svg>Estudiante</a>
-  <a data-v="cursos"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 6.5a3 3 0 010 5.6"/><path d="M18 14.5c2 .7 3.2 2.3 3.2 4.5"/></svg>Cursos</a>
+  <a data-v="inicio"><span class="cap"><svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5"/><path d="M6 9.8V20h12V9.8"/><path d="M10 20v-5h4v5"/></svg></span>Inicio</a>
+  <a data-v="evaluaciones"><span class="cap"><svg viewBox="0 0 24 24"><path d="M5 4h9l5 5v11a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M14 4v5h5"/><path d="M8 13h8M8 17h5"/></svg></span>Evaluar</a>
+  <a data-v="consolidado"><span class="cap"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h11M4 18h7"/></svg></span>Consolidado</a>
+  <a data-v="alumno"><span class="cap"><svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.6"/><path d="M12 9v6"/><path d="M8 11l4-2 4 2"/><path d="M9 21l3-6 3 6"/></svg></span>Estudiante</a>
+  <a data-v="cursos"><span class="cap"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 6.5a3 3 0 010 5.6"/><path d="M18 14.5c2 .7 3.2 2.3 3.2 4.5"/></svg></span>Cursos</a>
 </nav>
 
 <div id="printarea"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='37';
+const VER='40';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -938,32 +922,34 @@ function piePagina(){
 }
 
 const ESTILO_DOC = `
- body{font-family:Calibri,Arial,sans-serif;color:#1f2d3d;font-size:10.5pt;margin:0}
- .doc-band{background:#2e5d8a;color:#fff;padding:10pt 12pt;border-bottom:4px solid #d9a53b;
+ body{font-family:Calibri,Arial,sans-serif;color:#1f2d3d;font-size:9.5pt;margin:0}
+ .doc-band{background:#2e5d8a;color:#fff;padding:7pt 10pt;border-bottom:3px solid #d9a53b;
    display:table;width:100%;box-sizing:border-box}
- .doc-esc{display:table-cell;width:56px;vertical-align:middle}
- .doc-inst{display:table-cell;vertical-align:middle;padding-left:11pt}
- .doc-col{font-size:14pt;font-weight:bold;line-height:1.2}
- .doc-li{font-size:8.5pt;color:#cfe0ef;line-height:1.35}
- .doc-tit{border-left:4px solid #d9a53b;background:#f7fafc;padding:8pt 11pt;margin:10pt 0}
- .doc-h1{font-size:14pt;font-weight:bold;color:#2e5d8a}
- .doc-sub{font-size:9.5pt;color:#5d6a7a;margin-top:2pt}
- .doc-panel{background:#fdf6e6;border:1px solid #ead9b0;padding:7pt 11pt;margin-bottom:11pt;
-   font-size:9.5pt;color:#5d6a7a}
- .doc-panel .p1{font-weight:bold;color:#a8801f;margin-right:16pt}
- .doc-panel .pn{margin-right:16pt}
- .doc-sec{background:#2e5d8a;color:#fff;font-size:8.5pt;font-weight:bold;letter-spacing:.06em;
-   text-transform:uppercase;padding:5pt 9pt;margin-top:11pt}
- table.d{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:9pt}
- table.d th{background:#eaf1f8;color:#2e5d8a;padding:5pt 4pt;font-size:8.5pt;font-weight:bold;
-   letter-spacing:.04em;text-transform:uppercase;border:1px solid #cfdcea}
- table.d td{border:1px solid #dbe4ee;padding:4.5pt 4pt;text-align:center}
- table.d td.nm{text-align:left}
+ .doc-esc{display:table-cell;width:44px;vertical-align:middle}
+ .doc-inst{display:table-cell;vertical-align:middle;padding-left:9pt}
+ .doc-col{font-size:12pt;font-weight:bold;line-height:1.15}
+ .doc-li{font-size:7.5pt;color:#cfe0ef;line-height:1.25}
+ .doc-tit{border-left:3px solid #d9a53b;background:#f7fafc;padding:5pt 9pt;margin:7pt 0}
+ .doc-h1{font-size:12.5pt;font-weight:bold;color:#2e5d8a;line-height:1.2}
+ .doc-sub{font-size:8.5pt;color:#5d6a7a;margin-top:1pt}
+ .doc-panel{background:#fdf6e6;border:1px solid #ead9b0;padding:4.5pt 9pt;margin-bottom:7pt;
+   font-size:8.5pt;color:#5d6a7a;line-height:1.3}
+ .doc-panel .p1{font-weight:bold;color:#a8801f;margin-right:14pt}
+ .doc-panel .pn{margin-right:14pt}
+ .doc-sec{background:#2e5d8a;color:#fff;font-size:7.5pt;font-weight:bold;letter-spacing:.05em;
+   text-transform:uppercase;padding:3pt 8pt;margin-top:7pt}
+ table.d{width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:6pt;line-height:1.15}
+ table.d thead{display:table-header-group}
+ table.d tr{page-break-inside:avoid}
+ table.d th{background:#eaf1f8;color:#2e5d8a;padding:3pt 3pt;font-size:7.5pt;font-weight:bold;
+   letter-spacing:.03em;text-transform:uppercase;border:1px solid #cfdcea;white-space:nowrap}
+ table.d td{border:1px solid #dbe4ee;padding:2.4pt 3pt;text-align:center;white-space:nowrap}
+ table.d td.nm{text-align:left;white-space:normal}
  table.d tr:nth-child(even) td{background:#f4f8fc}
  table.d tr.total td{background:#fdf6e6;font-weight:bold;color:#a8801f}
  .up{color:#1e7d52;font-weight:bold}.down{color:#b93f2d;font-weight:bold}.eq{color:#93a1ba}
- .doc-pie{margin-top:14pt;padding-top:6pt;border-top:1px solid #cfdcea;
-   font-size:8pt;color:#7c8899;text-align:center}
+ .doc-pie{margin-top:9pt;padding-top:4pt;border-top:1px solid #cfdcea;
+   font-size:7.5pt;color:#7c8899;text-align:center}
 `;
 
 function escudoDoc(){
@@ -999,7 +985,7 @@ function cuerpoConsolidado(){
 
   let h=membrete('Consolidado · '+nomTest(t),
     `${c.n} · ${fs.length} ${fs.length===1?'evaluación':'evaluaciones'}${t.u?' · resultado en '+nomUni(t.u):''}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}`);
-  h+=tira([
+  h+=panel([
     (t.tipo==='logro'?'Logro del curso: ':'Promedio del curso: ')+prom,
     'Mejoraron: '+(comp?mej+' de '+comp:'—'),
     'Estudiantes: '+c.alumnos.length
@@ -1046,7 +1032,7 @@ function cuerpoEstudiante(){
   const jornadas=(()=>{const f={};DB.tests.forEach(t=>(t.evals||[]).forEach(e=>{if(e.aid===a.id)f[e.fecha]=1}));return Object.keys(f).length})();
 
   let h=membrete(a.n, `Informe individual de condición física · ${c.n} · 2026`);
-  h+=tira([
+  h+=panel([
     'Tests con registro: '+conReg+' de '+DB.tests.length,
     'Mejoró en: '+(compar.length?subieron+' de '+compar.length:'—'),
     'Jornadas: '+jornadas
@@ -1105,7 +1091,7 @@ function tablaCurso(t,f,c){
 function cuerpoCurso(){
   const t=testAct(),f=fechaAct(),c=curso(),m=metricas();
   let h=membrete(nomTest(t), `${c.n} · Aplicado el ${fcorta(f)}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}`);
-  h+=tira([
+  h+=panel([
     (t.tipo==='logro'?'Logro del curso: ':'Promedio del curso: ')+(t.tipo==='logro'?(m.logro===null?'—':m.logro+'%'):(m.prom===null?'—':fmt(m.prom,1).replace('.',','))),
     'Registrados: '+m.con+' de '+m.total,
     'Ausencias: '+m.aus+' sin justificar · '+m.just+' justificadas'
