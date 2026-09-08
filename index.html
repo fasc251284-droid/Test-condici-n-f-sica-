@@ -12,7 +12,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Test de Condición Física v2</title>
+<title>Test de Condición Física</title>
 <style>
 :root{--azul:#0a4d78;--azul2:#0089c9;--cel:#00a8f5;--cel2:#7fd2fb;--plata:#c3ced6;--oro:#00a8f5;--bg:#f3f5f9;--card:#fff;--linea:#dde3ee;--txt:#16233d;--txt2:#5d6a85;
   --ok:#1e8e5a;--okbg:#e3f5ec;--med:#b9821a;--medbg:#fdf3dc;--baj:#c2412f;--bajbg:#fbe6e2;--r:14px;}
@@ -264,7 +264,12 @@ nav a.on svg{stroke-width:2.15}
 nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);
   width:26px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,#00a8f5,#0089c9)}
 
-@media print{body{padding:0;background:#fff}header,nav{display:none!important}}
+@media print{
+  html,body{margin:0;padding:0;background:#fff;overflow:visible}
+  body>header,body>nav,body>main,body>.toast{display:none!important}
+  #printarea{display:block!important;padding:0}
+  @page{size:A4;margin:1.2cm}
+}
 </style>
 </head>
 <body>
@@ -278,7 +283,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">44</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">45</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -296,7 +301,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='44';
+const VER='45';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
