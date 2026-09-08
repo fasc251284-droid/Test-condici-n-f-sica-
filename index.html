@@ -278,7 +278,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">42</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">44</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -296,7 +296,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='42';
+const VER='44';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -368,6 +368,7 @@ const save=(local)=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){t
 const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600)};
 const curso=()=>DB.cursos.find(c=>c.id===DB.activo)||DB.cursos[0];
 const fcorta=f=>{if(!f)return '—';const p=f.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0].slice(2):f};
+const flarga=f=>{if(!f)return '—';const p=f.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:f};
 
 function nivel(test,v){const x=num(v);if(x===null)return 'x';if(test.tipo==='logro')return(v==='L')?'a':(v==='P'?'m':'b');if(test.mejor==='menor')return x<=test.c1?'a':(x<=test.c2?'m':'b');return x>=test.c1?'a':(x>=test.c2?'m':'b')}
 
@@ -904,52 +905,68 @@ function membrete(titulo,sub){
     <div class="doc-inst"><div class="doc-col">Colegio Juan Pablo II</div>
       <div class="doc-li">Los Lagos · Educación Física y Salud</div>
       <div class="doc-li">Prof. Felipe Sanhueza Cárdenas</div></div>
+    <div class="doc-emi">Emitido el ${(()=>{const p=hoy().split('-');return p[2]+'/'+p[1]+'/'+p[0]})()}</div>
   </div>
   <div class="doc-tit"><div class="doc-h1">${titulo}</div><div class="doc-sub">${sub}</div></div>`;
 }
 
 function panel(items){
-  return `<div class="doc-panel">`+items.map((it,i)=>
-    `<span class="${i===0?'p1':'pn'}">${it}</span>`).join('')+`</div>`;
+  return `<div class="doc-panel"><table><tr>`+items.map((it,i)=>
+    `<td class="${i===0?'p1':'pn'}">${it}</td>`).join('')+`</tr></table></div>`;
 }
 
-function seccion(titulo,html){
-  return `<div class="doc-sec">${titulo}</div>${html}`;
+function seccion(titulo,html,meta){
+  return `<div class="doc-sec"><span>${titulo}</span>${meta?`<span class="meta">${meta}</span>`:''}</div>${html||''}`;
+}
+
+function bloqueFinal(lab,val){
+  return `<div class="doc-final"><span>${lab}</span><b>${val}</b></div>`;
 }
 
 function piePagina(){
-  return `<div class="doc-pie">Colegio Juan Pablo II · Educación Física y Salud · Prof. Felipe Sanhueza Cárdenas · Emitido el ${fcorta(hoy())}</div>`;
+  return `<div class="doc-pie">Colegio Juan Pablo II · Educación Física y Salud · Prof. Felipe Sanhueza Cárdenas</div>`;
 }
 
 const ESTILO_DOC = `
  body{font-family:Calibri,Arial,sans-serif;color:#1f2d3d;font-size:9.5pt;margin:0}
- .doc-band{background:#2e5d8a;color:#fff;padding:7pt 10pt;border-bottom:3px solid #d9a53b;
-   display:table;width:100%;box-sizing:border-box}
- .doc-esc{display:table-cell;width:44px;vertical-align:middle}
+ .doc-band{background:#2e5d8a;color:#fff;padding:8pt 11pt;border-bottom:3px solid #d9a53b;
+   display:table;width:100%;box-sizing:border-box;border-radius:5pt 5pt 0 0}
+ .doc-esc{display:table-cell;width:42px;vertical-align:middle}
  .doc-inst{display:table-cell;vertical-align:middle;padding-left:9pt}
+ .doc-emi{display:table-cell;vertical-align:bottom;text-align:right;font-size:7.5pt;color:#cfe0ef;white-space:nowrap}
  .doc-col{font-size:12pt;font-weight:bold;line-height:1.15}
  .doc-li{font-size:7.5pt;color:#cfe0ef;line-height:1.25}
- .doc-tit{border-left:3px solid #d9a53b;background:#f7fafc;padding:5pt 9pt;margin:7pt 0}
- .doc-h1{font-size:12.5pt;font-weight:bold;color:#2e5d8a;line-height:1.2}
+ .doc-tit{border-left:3px solid #d9a53b;background:#eef3f8;padding:6pt 10pt;margin:8pt 0 7pt}
+ .doc-h1{font-size:13pt;font-weight:bold;color:#2e5d8a;line-height:1.2}
  .doc-sub{font-size:8.5pt;color:#5d6a7a;margin-top:1pt}
- .doc-panel{background:#fdf6e6;border:1px solid #ead9b0;padding:4.5pt 9pt;margin-bottom:7pt;
-   font-size:8.5pt;color:#5d6a7a;line-height:1.3}
- .doc-panel .p1{font-weight:bold;color:#a8801f;margin-right:14pt}
- .doc-panel .pn{margin-right:14pt}
+ .doc-panel{background:#fdf6e6;border:1px solid #ead9b0;padding:5pt 10pt;margin-bottom:8pt;border-radius:3pt}
+ .doc-panel table{width:100%;border-collapse:collapse}
+ .doc-panel td{font-size:8.5pt;color:#5d6a7a;padding:0}
+ .doc-panel .p1{font-weight:bold;color:#a8801f;width:34%}
+ .doc-panel .pn{width:33%}
  .doc-sec{background:#2e5d8a;color:#fff;font-size:7.5pt;font-weight:bold;letter-spacing:.05em;
-   text-transform:uppercase;padding:3pt 8pt;margin-top:7pt}
- table.d{width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:6pt;line-height:1.15}
+   text-transform:uppercase;padding:4pt 9pt;margin-top:9pt;border-radius:3pt 3pt 0 0;
+   display:table;width:100%;box-sizing:border-box}
+ .doc-sec span{display:table-cell}
+ .doc-sec .meta{text-align:right;font-weight:normal;letter-spacing:.02em;color:#dbe8f4;text-transform:none;font-size:8pt}
+ table.d{width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:7pt;line-height:1.15}
  table.d thead{display:table-header-group}
  table.d tr{page-break-inside:avoid}
- table.d th{background:#eaf1f8;color:#2e5d8a;padding:3pt 3pt;font-size:7.5pt;font-weight:bold;
-   letter-spacing:.03em;text-transform:uppercase;border:1px solid #cfdcea;white-space:nowrap}
+ table.d th{background:#2e5d8a;color:#fff;padding:3.5pt 3pt;font-size:7.5pt;font-weight:bold;
+   letter-spacing:.03em;text-transform:uppercase;border:1px solid #24506f;white-space:nowrap}
  table.d td{border:1px solid #dbe4ee;padding:2.4pt 3pt;text-align:center;white-space:nowrap}
  table.d td.nm{text-align:left;white-space:normal}
  table.d tr:nth-child(even) td{background:#f4f8fc}
  table.d tr.total td{background:#fdf6e6;font-weight:bold;color:#a8801f}
+ table.d.lig th{background:#eef3f8;color:#2e5d8a;border:1px solid #cfdcea}
+ .doc-final{background:#e8f1f9;border:1px solid #cfdcea;border-radius:4pt;padding:8pt 12pt;
+   margin-top:9pt;display:table;width:100%;box-sizing:border-box}
+ .doc-final span{display:table-cell;font-size:10pt;font-weight:bold;color:#2e5d8a;
+   letter-spacing:.04em;text-transform:uppercase}
+ .doc-final b{display:table-cell;text-align:right;font-size:14pt;color:#2e5d8a}
  .up{color:#1e7d52;font-weight:bold}.down{color:#b93f2d;font-weight:bold}.eq{color:#93a1ba}
- .doc-pie{margin-top:9pt;padding-top:4pt;border-top:1px solid #cfdcea;
-   font-size:7.5pt;color:#7c8899;text-align:center}
+ .doc-pie{margin-top:11pt;padding-top:5pt;border-top:1px solid #cfdcea;
+   font-size:7.5pt;color:#7c8899}
 `;
 
 function escudoDoc(){
@@ -1021,86 +1038,55 @@ function cuerpoConsolidado(){
 
 function cuerpoEstudiante(){
   const c=curso(),a=c.alumnos.find(x=>x.id===DB.alumno);
-  const resumen=DB.tests.map(t=>{
+  const filas=DB.tests.map(t=>{
     const ev=(t.evals||[]).filter(e=>e.aid===a.id).sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
     const con=ev.filter(e=>e.val);
     return {t,ev,con,m:con.length>1?mejora(t,con[0].val,con[con.length-1].val):null};
   });
-  const conReg=resumen.filter(r=>r.con.length).length;
-  const compar=resumen.filter(r=>r.m);
-  const subieron=compar.filter(r=>r.m.c==='up').length;
-  const jornadas=(()=>{const f={};DB.tests.forEach(t=>(t.evals||[]).forEach(e=>{if(e.aid===a.id)f[e.fecha]=1}));return Object.keys(f).length})();
+  const conReg=filas.filter(r=>r.con.length).length;
+  const comp=filas.filter(r=>r.m);
+  const subieron=comp.filter(r=>r.m.c==='up').length;
+  const jorn=(()=>{const f={};DB.tests.forEach(t=>(t.evals||[]).forEach(e=>{if(e.aid===a.id)f[e.fecha]=1}));return Object.keys(f).length})();
+  const aus=(()=>{let n=0;DB.tests.forEach(t=>(t.evals||[]).forEach(e=>{if(e.aid===a.id&&(e.asist==='A'||e.asist==='J'))n++}));return n})();
 
-  let h=membrete(a.n, `Informe individual de condición física · ${c.n} · 2026`);
+  let h=membrete(a.n, `Informe individual de condición física · ${c.n} · ${jorn} ${jorn===1?'jornada registrada':'jornadas registradas'}`);
   h+=panel([
-    'Tests con registro: '+conReg+' de '+DB.tests.length,
-    'Mejoró en: '+(compar.length?subieron+' de '+compar.length:'—'),
-    'Jornadas: '+jornadas
+    `Tests con registro: ${conReg} de ${DB.tests.length}`,
+    `Mejoró en: ${comp.length?subieron+' de '+comp.length:'—'}`,
+    `Inasistencias: ${aus}`
   ]);
 
-  h+=seccion('Resumen general');
-  h+=`<table class="d"><thead><tr><th style="text-align:left">Test</th><th>Primera</th><th>Última</th><th>Avance</th><th>Registros</th></tr></thead><tbody>`;
-  resumen.forEach(r=>{
-    if(!r.con.length){h+=`<tr><td class="nm">${nomTest(r.t)}</td><td colspan="4" style="color:#93a1ae">Sin registro</td></tr>`;return}
-    h+=`<tr><td class="nm">${nomTest(r.t)}${r.t.u?' ('+nomUni(r.t.u)+')':''}</td>
-      <td>${r.con[0].val}</td><td><b>${r.con[r.con.length-1].val}</b></td>
-      <td class="${r.m?r.m.c:'eq'}">${r.m?r.m.t:'—'}</td><td>${r.con.length}</td></tr>`;
-  });
-  h+=`</tbody></table>`;
+  h+=seccion('Resumen por test',
+    `<table class="d"><thead><tr><th style="text-align:left">Test</th><th>Unidad</th><th>Primera</th><th>Última</th><th>Avance</th><th>Registros</th></tr></thead><tbody>`+
+    filas.map(r=>{
+      if(!r.con.length)return `<tr><td class="nm">${nomTest(r.t)}</td><td>${nomUni(r.t.u)||'—'}</td><td colspan="4" style="color:#93a1ba">Sin registro</td></tr>`;
+      return `<tr><td class="nm">${nomTest(r.t)}</td><td>${nomUni(r.t.u)||'—'}</td>
+        <td>${r.con[0].val}</td><td><b>${r.con[r.con.length-1].val}</b></td>
+        <td class="${r.m?r.m.c:'eq'}">${r.m?r.m.t:'—'}</td><td>${r.con.length}</td></tr>`;
+    }).join('')+`</tbody></table>`,
+    `${conReg} de ${DB.tests.length} tests`);
 
-  resumen.filter(r=>r.ev.length).forEach(r=>{
-    h+=seccion(nomTest(r.t)+(r.t.u?' · '+nomUni(r.t.u):'')+(r.t.tipo==='logro'&&r.t.seg?' · '+r.t.seg+' segundos':''));
-    h+=`<table class="d"><thead><tr><th>Fecha</th><th>Asistencia</th><th>Resultado</th><th>Avance</th></tr></thead><tbody>`;
-    r.ev.forEach((e,i)=>{
-      const m=i>0?mejora(r.t,r.ev[i-1].val,e.val):null;
-      h+=`<tr><td>${fcorta(e.fecha)}</td><td>${e.asist||'—'}</td><td><b>${e.val||'—'}</b></td>
-          <td class="${m?m.c:'eq'}">${m?m.t:'—'}</td></tr>`;
-    });
-    h+=`</tbody></table>`;
+  filas.filter(r=>r.ev.length).forEach(r=>{
+    const adp=DB.adaptaciones[a.id]&&DB.adaptaciones[a.id][r.t.id];
+    h+=seccion(nomTest(r.t),
+      `<table class="d"><thead><tr><th style="width:20%">Fecha</th><th style="width:18%">Asistencia</th><th style="width:20%">Resultado</th><th style="width:16%">Avance</th><th style="text-align:left">Observación</th></tr></thead><tbody>`+
+      r.ev.map((e,i)=>{
+        const m=i>0?mejora(r.t,r.ev[i-1].val,e.val):null;
+        return `<tr><td>${flarga(e.fecha)}</td><td>${e.asist||'—'}</td><td><b>${e.val||'—'}</b></td>
+          <td class="${m?m.c:'eq'}">${m?m.t:'—'}</td><td class="nm" style="font-size:7.5pt;color:#5d6a7a">${i===0&&adp?adp:''}</td></tr>`;
+      }).join('')+`</tbody></table>`,
+      (r.t.u?nomUni(r.t.u):'')+(r.t.tipo==='logro'&&r.t.seg?' · '+r.t.seg+' segundos':'')+(r.t.id==='vel'&&r.t.mts?' · '+r.t.mts+' metros':''));
   });
 
   const ad=DB.adaptaciones[a.id];
   if(ad&&Object.keys(ad).length){
-    h+=seccion('Adaptaciones');
-    h+=`<table class="d"><tbody>`;
-    Object.entries(ad).forEach(([tid,d])=>{const t=DB.tests.find(x=>x.id===tid);
-      h+=`<tr><td class="nm" style="width:32%"><b>${t?nomTest(t):tid}</b></td><td class="nm">${d}</td></tr>`});
-    h+=`</tbody></table>`;
+    h+=seccion('Adecuaciones aplicadas',
+      `<table class="d lig"><tbody>`+Object.entries(ad).map(([tid,d])=>{
+        const t=DB.tests.find(x=>x.id===tid);
+        return `<tr><td class="nm" style="width:28%"><b>${t?nomTest(t):tid}</b></td><td class="nm">${d}</td></tr>`;
+      }).join('')+`</tbody></table>`);
   }
-  return h+piePagina();
-}
-
-function tablaCurso(t,f,c){
-  const m=metricas();
-  let h=seccion('Registro del curso · '+fcorta(f));
-  h+=`<table class="d"><thead><tr><th style="width:9%">N°</th><th style="text-align:left">Estudiante</th>
-      <th style="width:16%">Asistencia</th><th style="width:18%">Resultado</th></tr></thead><tbody>`;
-  c.alumnos.forEach((a,i)=>{
-    const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
-    h+=`<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td>
-        <td>${e&&e.asist?e.asist:'—'}</td><td>${e&&e.val?e.val:'—'}</td></tr>`;
-  });
-  const res = t.tipo==='logro'
-    ? (m.logro===null?'—':m.logro+'% de logro')
-    : (m.prom===null?'—':fmt(m.prom,1).replace('.',',')+' '+nomUni(t.u));
-  h+=`<tr class="tot"><td colspan="3">PROMEDIO DEL CURSO</td><td>${res}</td></tr>`;
-  h+=`</tbody></table>`;
-  return h;
-}
-
-function cuerpoCurso(){
-  const t=testAct(),f=fechaAct(),c=curso(),m=metricas();
-  let h=membrete(nomTest(t), `${c.n} · Aplicado el ${fcorta(f)}${t.tipo==='logro'&&t.seg?' · '+t.seg+' segundos':''}`);
-  h+=panel([
-    (t.tipo==='logro'?'Logro del curso: ':'Promedio del curso: ')+(t.tipo==='logro'?(m.logro===null?'—':m.logro+'%'):(m.prom===null?'—':fmt(m.prom,1).replace('.',','))),
-    'Registrados: '+m.con+' de '+m.total,
-    'Ausencias: '+m.aus+' sin justificar · '+m.just+' justificadas'
-  ]);
-  h+=seccion('Marcas de la planilla');
-  h+=`<table class="d"><tbody><tr>
-    <td><b>P</b><br>presente</td><td><b>A</b><br>ausente</td><td><b>J</b><br>justificado</td>
-    <td><b>—</b><br>sin evaluar</td>${t.tipo==='logro'?'<td><b>L / NL</b><br>logrado o no</td>':''}</tr></tbody></table>`;
-  h+=tablaCurso(t,f,c);
+  h+=bloqueFinal('Tests en que mejoró', comp.length?subieron+' de '+comp.length:'—');
   return h+piePagina();
 }
 
@@ -1108,36 +1094,38 @@ function informeCurso(){imprimir(cuerpoCurso())}
 
 function cuerpoCurso(){
   const t=testAct(),f=fechaAct(),c=curso(),m=metricas();
-  let h=membrete(nomTest(t), `Registro de aplicación · ${c.n} · ${fcorta(f)}`);
   const prom = t.tipo==='logro'
-    ? (m.logro===null?'—':m.logro+'% de logro')
+    ? (m.logro===null?'—':m.logro+'%')
     : (m.prom===null?'—':fmt(m.prom,1).replace('.',',')+' '+nomUni(t.u));
+  let h=membrete(nomTest(t), `Registro de aplicación · ${c.n} · ${fcorta(f)}`);
   h+=panel([
     (t.tipo==='logro'?'Logro del curso: ':'Promedio del curso: ')+prom,
     `Registrados: ${m.con} de ${m.total}`,
     `Ausencias: ${m.aus} sin justificar · ${m.just} justificadas`
   ]);
-  h+=seccion('Condiciones de aplicación',
-    `<table class="d"><tbody>
-      <tr><td class="nm" style="width:30%"><b>Test</b></td><td class="nm">${nomTest(t)}</td></tr>
-      <tr><td class="nm"><b>Unidad de medida</b></td><td class="nm">${nomUni(t.u)||'—'}${t.tipo==='logro'?' (logrado / no logrado)':''}</td></tr>
-      ${t.tipo==='logro'&&t.seg?`<tr><td class="nm"><b>Tiempo exigido</b></td><td class="nm">${t.seg} segundos</td></tr>`:''}
-      ${t.id==='vel'&&t.mts?`<tr><td class="nm"><b>Distancia</b></td><td class="nm">${t.mts} metros</td></tr>`:''}
-      <tr><td class="nm"><b>Fecha de aplicación</b></td><td class="nm">${fcorta(f)}</td></tr>
+  h+=seccion('Condiciones de aplicación', `<table class="d lig"><tbody>
+      <tr><td class="nm" style="width:26%"><b>Test</b></td><td class="nm">${nomTest(t)}</td>
+          <td class="nm" style="width:22%"><b>Unidad</b></td><td class="nm">${nomUni(t.u)||'—'}</td></tr>
+      <tr><td class="nm"><b>Fecha</b></td><td class="nm">${fcorta(f)}</td>
+          <td class="nm"><b>${t.tipo==='logro'?'Tiempo exigido':(t.id==='vel'?'Distancia':'Criterio')}</b></td>
+          <td class="nm">${t.tipo==='logro'?(t.seg||30)+' segundos':(t.id==='vel'?(t.mts||20)+' metros':(t.mejor==='menor'?'menor es mejor':'mayor es mejor'))}</td></tr>
     </tbody></table>`);
-  h+=seccion('Marcas de la planilla',
-    `<table class="d"><thead><tr><th>P</th><th>A</th><th>J</th><th>—</th></tr></thead>
-     <tbody><tr><td>presente</td><td>ausente</td><td>justificado</td><td>sin evaluar</td></tr></tbody></table>`);
+  h+=seccion('Marcas de la planilla', `<table class="d lig"><thead><tr><th>P</th><th>A</th><th>J</th><th>—</th></tr></thead>
+     <tbody><tr><td>presente</td><td>ausente sin justificar</td><td>ausente justificado</td><td>sin evaluar</td></tr></tbody></table>`);
   h+=seccion(`${c.n} · ${fcorta(f)}`,
-    `<table class="d"><thead><tr><th style="width:8%">N°</th><th style="text-align:left">Estudiante</th>
-      <th style="width:15%">Asistencia</th><th style="width:18%">Resultado</th></tr></thead><tbody>`+
+    `<table class="d"><thead><tr><th style="width:7%">N°</th><th style="text-align:left">Estudiante</th>
+      <th style="width:13%">Asistencia</th><th style="width:16%">Resultado</th><th style="text-align:left">Observación</th></tr></thead><tbody>`+
     c.alumnos.map((a,i)=>{
       const e=(t.evals||[]).find(x=>x.aid===a.id&&x.fecha===f);
-      return `<tr><td>${String(i+1).padStart(2,'0')}</td><td class="nm">${a.n}</td>
-        <td>${e&&e.asist?e.asist:'—'}</td><td><b>${e&&e.val?e.val:'—'}</b></td></tr>`;
+      const ad=DB.adaptaciones[a.id]&&DB.adaptaciones[a.id][t.id];
+      return `<tr><td>${i+1}</td><td class="nm">${a.n}</td>
+        <td>${e&&e.asist?e.asist:'—'}</td><td><b>${e&&e.val?e.val:'—'}</b></td>
+        <td class="nm" style="font-size:7.5pt;color:#5d6a7a">${ad||''}</td></tr>`;
     }).join('')+
     `<tr class="total"><td></td><td class="nm">${t.tipo==='logro'?'LOGRO DEL CURSO':'PROMEDIO DEL CURSO'}</td>
-      <td>${m.pres} presentes</td><td>${prom}</td></tr></tbody></table>`);
+      <td>${m.pres} presentes</td><td>${prom}</td><td></td></tr></tbody></table>`,
+    `${m.total} estudiantes · ${m.con} registrados`);
+  h+=bloqueFinal(t.tipo==='logro'?'Logro del curso':'Promedio del curso', prom);
   return h+piePagina();
 }
 
