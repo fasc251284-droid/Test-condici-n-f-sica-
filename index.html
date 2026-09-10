@@ -284,7 +284,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">48</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">52</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -302,7 +302,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='48';
+const VER='52';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -479,7 +479,14 @@ function vCursos(){
     });
   }else{
     h+=`<div class="hint" style="margin-bottom:10px">No encontré listas de otras apps en este navegador. Abre la otra app una vez en este mismo dispositivo, o pega los nombres abajo.</div>`;
+    h+=`<button type="button" class="fila" id="verDiag"><span class="ico">🔍</span>Ver qué hay guardado en este navegador<span class="arrow">›</span></button>`;
+    h+=`<div id="diag" style="display:none"></div>`;
   }
+  h+=`<button type="button" class="fila" id="btnArch"><span class="ico">📂</span>
+      <span style="flex:1;min-width:0"><b style="display:block">Abrir respaldo de otra app</b>
+      <span style="font-size:11.5px;color:var(--txt2)">Archivo descargado desde Evaluaciones EF o Planillas EF</span></span>
+      <span class="arrow">›</span></button>
+    <input type="file" id="archImp" accept=".json,.txt,.csv,application/json,text/plain" style="display:none">`;
   h+=`<label class="f" style="margin-top:6px">Pegar lista de nombres</label>
     <textarea id="pegaLista" rows="4" placeholder="Un nombre por línea"></textarea>
     <button type="button" class="oro" id="addLista">Agregar los nombres pegados</button>
@@ -1295,6 +1302,49 @@ function bind(){
     const n=agregarNombres(g.nombres);
     render(); toast(n?n+' estudiantes agregados':'Ya estaban todos');
   })});
+  if($('verDiag'))$('verDiag').addEventListener('click',()=>{
+    const dv=$('diag'); if(!dv)return;
+    let filas='';
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i), v=localStorage.getItem(k)||'';
+      let tipo='texto', detalle='';
+      try{const j=JSON.parse(v);
+        tipo=Array.isArray(j)?('lista de '+j.length):(typeof j==='object'&&j?'objeto: '+Object.keys(j).slice(0,5).join(', '):'valor');
+      }catch(e){detalle=v.slice(0,40)}
+      filas+=`<tr><td class="nm" style="word-break:break-all"><b>${k}</b></td><td class="nm">${tipo}${detalle}</td><td>${(v.length/1024).toFixed(1)} KB</td></tr>`;
+    }
+    dv.innerHTML = filas
+      ? `<div class="tabc" style="margin-top:10px"><table><thead><tr><th class="est">Clave</th><th>Contenido</th><th>Tamaño</th></tr></thead><tbody>${filas}</tbody></table></div>
+         <div class="hint" style="margin-top:8px">Si aquí solo aparece <b>cjp2_tcf_v2</b>, este navegador no tiene datos de tus otras apps. Ábrelas una vez en este mismo navegador y vuelve.</div>`
+      : `<div class="hint" style="margin-top:10px">Este navegador no tiene nada guardado.</div>`;
+    dv.style.display='block';
+  });
+  if($('btnArch'))$('btnArch').addEventListener('click',()=>{const f=$('archImp');if(f)f.click()});
+  if($('archImp'))$('archImp').addEventListener('change',ev=>{
+    const f=ev.target.files&&ev.target.files[0]; if(!f)return;
+    const lector=new FileReader();
+    lector.onload=()=>{
+      const txt=String(lector.result||'');
+      let grupos=[];
+      try{ const j=JSON.parse(txt); buscarGrupos(j,'',grupos,0); }catch(e){}
+      if(!grupos.length){
+        // texto plano o CSV: una linea por estudiante
+        const lineas=txt.split(/\r?\n/).map(l=>{
+          const campos=l.split(/[,;\t]/).map(x=>x.replace(/^["']|["']$/g,'').replace(/^\s*\d+[).\-\s]+/,'').trim());
+          return campos.find(pareceNombre)||null;
+        }).filter(Boolean);
+        if(lineas.length>=2)grupos=[{ruta:f.name, nombres:[...new Set(lineas)]}];
+      }
+      if(!grupos.length){toast('No encontré nombres en ese archivo');return}
+      grupos.sort((a,b)=>b.nombres.length-a.nombres.length);
+      const g=grupos[0];
+      const otras=grupos.length>1?'\n\n(el archivo tiene '+grupos.length+' listas; se usará la más larga)':'';
+      if(!confirm('Agregar '+g.nombres.length+' estudiantes de "'+(g.ruta||f.name)+'" a '+curso().n+'?'+otras))return;
+      const n=agregarNombres(g.nombres);
+      render(); toast(n?n+' estudiantes agregados':'Ya estaban todos');
+    };
+    lector.readAsText(f);
+  });
   if($('addLista'))$('addLista').addEventListener('click',()=>{
     const t=$('pegaLista').value.split(/\r?\n|;/).map(x=>x.replace(/^\s*\d+[).\-\s]+/,'')).filter(x=>x.trim());
     if(!t.length){toast('Pega al menos un nombre');return}
