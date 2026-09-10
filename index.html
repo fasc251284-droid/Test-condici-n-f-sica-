@@ -265,6 +265,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
   width:26px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,#00a8f5,#0089c9)}
 
 @media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
   html,body{margin:0;padding:0;background:#fff;overflow:visible}
   body>header,body>nav,body>main,body>.toast{display:none!important}
   #printarea{display:block!important;padding:0}
@@ -283,7 +284,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
     </button>
     <div class="autosave"><i></i>Guardado automático</div>
   </div>
-  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">45</span></div>
+  <div class="hsub">Test de Condición Física · Prof. Felipe Sanhueza Cárdenas · v<span id="vtag">48</span></div>
   <select id="pillSel" class="pillsel"></select>
 </header>
 
@@ -301,7 +302,7 @@ nav a.on::before{content:'';position:absolute;top:-8px;left:50%;transform:transl
 <div class="toast" id="toast"></div>
 
 <script>
-const VER='45';
+const VER='48';
 
 /* Autoactualizacion: si en el servidor hay una version mas nueva, recarga solo */
 setTimeout(()=>{
@@ -392,6 +393,72 @@ function render(){
   bind();
 }
 
+/* ---------- Traer estudiantes desde otras apps del mismo sitio ---------- */
+function pareceNombre(x){
+  return typeof x==='string' && x.trim().length>4 && x.trim().length<70
+    && /[A-Za-zÁÉÍÓÚÑáéíóúñ]/.test(x) && /\s/.test(x) && !/^https?:|[{}<>]/.test(x);
+}
+function nombreDe(o){
+  if(pareceNombre(o))return o.trim();
+  if(o&&typeof o==='object'){
+    for(const k of ['n','nombre','name','alumno','estudiante','nombreCompleto','fullName']){
+      if(pareceNombre(o[k]))return o[k].trim();
+    }
+    const ap=o.apellidos||o.apellido, no=o.nombres||o.nombre;
+    if(typeof ap==='string'&&typeof no==='string'&&(ap+' '+no).trim().length>4)return (ap+' '+no).trim();
+  }
+  return null;
+}
+function buscarGrupos(valor, ruta, salida, prof){
+  if(prof>6||valor==null)return;
+  if(Array.isArray(valor)){
+    const nombres=valor.map(nombreDe).filter(Boolean);
+    if(nombres.length>=3 && nombres.length===valor.length){
+      salida.push({ruta:ruta||'Lista de estudiantes', nombres:[...new Set(nombres)]});
+      return;
+    }
+    valor.forEach(v=>{
+      const et=(v&&typeof v==='object')?(v.n||v.nombre||v.curso||v.name):null;
+      buscarGrupos(v, (typeof et==='string'&&et.length<40)?et:ruta, salida, prof+1);
+    });
+    return;
+  }
+  if(typeof valor==='object'){
+    Object.keys(valor).forEach(k=>{
+      const hijo=valor[k];
+      const et=(hijo&&typeof hijo==='object'&&typeof hijo.n==='string')?hijo.n:k;
+      const gen=/^(alumnos|estudiantes|lista|listas|items|data|datos|cursos)$/i.test(et);
+      buscarGrupos(hijo, gen?ruta:(ruta?ruta+' · '+et:et), salida, prof+1);
+    });
+  }
+}
+function gruposExternos(){
+  const res=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k===KEY||k===SKEY)continue;
+    let v; try{v=JSON.parse(localStorage.getItem(k))}catch(e){continue}
+    const g=[]; buscarGrupos(v,'',g,0);
+    g.forEach(x=>res.push({app:k, ruta:x.ruta, nombres:x.nombres}));
+  }
+  // quitar duplicados exactos
+  const vistos={};
+  return res.filter(x=>{const f=x.nombres.join('|');if(vistos[f])return false;vistos[f]=1;return true})
+            .sort((a,b)=>b.nombres.length-a.nombres.length).slice(0,12);
+}
+function agregarNombres(nombres){
+  const c=curso();
+  const yaHay=new Set(c.alumnos.map(a=>sinTilde(a.n)));
+  let n=0;
+  nombres.forEach(x=>{
+    const nom=x.trim().toUpperCase();
+    if(!nom||yaHay.has(sinTilde(nom)))return;
+    c.alumnos.push({id:uid(), n:nom}); yaHay.add(sinTilde(nom)); n++;
+  });
+  if(n){c.alumnos.sort((a,b)=>sinTilde(a.n).localeCompare(sinTilde(b.n)));save()}
+  return n;
+}
+
 function vCursos(){
   const c=curso();
   let h=`<div class="card"><h2>Cursos</h2><select id="selCurso">${DB.cursos.map(x=>`<option value="${x.id}" ${x.id===c.id?'selected':''}>${x.n} · ${x.alumnos.length} estudiantes</option>`).join('')}</select></div>`;
@@ -399,6 +466,25 @@ function vCursos(){
   if(!c.alumnos.length)h+=`<div style="text-align:center;color:var(--txt2);padding:20px">Sin estudiantes</div>`;
   c.alumnos.forEach((a,i)=>{h+=`<div class="alu"><div class="n">${i+1}</div><div class="nm">${a.n}</div><button class="gh" style="width:60px;font-size:12px;margin:0" id="verA${a.id}">Ver</button><button class="gh" style="width:50px;font-size:12px;margin:0" id="delA${a.id}">✕</button></div>`});
   h+=`<div class="row"><input type="text" id="nuevoAlu" placeholder="Nombre completo" style="margin-bottom:0"><button class="oro" id="addAlu" style="flex:0 0 88px;margin-bottom:0">Agregar</button></div></div>`;
+
+  const gr=gruposExternos();
+  h+=`<div class="card"><h2>Traer estudiantes</h2>`;
+  if(gr.length){
+    h+=`<div class="hint" style="margin-bottom:10px">Listas encontradas en tus otras apps de este mismo navegador. Toca una para copiarla a <b>${c.n}</b>.</div>`;
+    gr.forEach((g,i)=>{
+      h+=`<button type="button" class="fila" id="imp${i}"><span class="ico">👥</span>
+        <span style="flex:1;min-width:0"><b style="display:block">${g.ruta||'Lista'}</b>
+        <span style="font-size:11.5px;color:var(--txt2)">${g.nombres.length} estudiantes · ${g.app}</span></span>
+        <span class="arrow">›</span></button>`;
+    });
+  }else{
+    h+=`<div class="hint" style="margin-bottom:10px">No encontré listas de otras apps en este navegador. Abre la otra app una vez en este mismo dispositivo, o pega los nombres abajo.</div>`;
+  }
+  h+=`<label class="f" style="margin-top:6px">Pegar lista de nombres</label>
+    <textarea id="pegaLista" rows="4" placeholder="Un nombre por línea"></textarea>
+    <button type="button" class="oro" id="addLista">Agregar los nombres pegados</button>
+    <button type="button" class="fila" id="copiarCurso" style="margin-top:4px"><span class="ico">📋</span>Copiar la lista de ${c.n}<span class="arrow">›</span></button>
+  </div>`;
   return h;
 }
 
@@ -933,23 +1019,24 @@ function piePagina(){
 }
 
 const ESTILO_DOC = `
+ *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
  body{font-family:Calibri,Arial,sans-serif;color:#1f2d3d;font-size:9.5pt;margin:0}
- .doc-band{background:#2e5d8a;color:#fff;padding:8pt 11pt;border-bottom:3px solid #d9a53b;
+ .doc-band{background:#2e5d8a!important;color:#fff!important;padding:8pt 11pt;border-bottom:3px solid #d9a53b;
    display:table;width:100%;box-sizing:border-box;border-radius:5pt 5pt 0 0}
  .doc-esc{display:table-cell;width:42px;vertical-align:middle}
  .doc-inst{display:table-cell;vertical-align:middle;padding-left:9pt}
  .doc-emi{display:table-cell;vertical-align:bottom;text-align:right;font-size:7.5pt;color:#cfe0ef;white-space:nowrap}
  .doc-col{font-size:12pt;font-weight:bold;line-height:1.15}
  .doc-li{font-size:7.5pt;color:#cfe0ef;line-height:1.25}
- .doc-tit{border-left:3px solid #d9a53b;background:#eef3f8;padding:6pt 10pt;margin:8pt 0 7pt}
+ .doc-tit{border-left:3px solid #d9a53b;background:#eef3f8!important;padding:6pt 10pt;margin:8pt 0 7pt}
  .doc-h1{font-size:13pt;font-weight:bold;color:#2e5d8a;line-height:1.2}
  .doc-sub{font-size:8.5pt;color:#5d6a7a;margin-top:1pt}
- .doc-panel{background:#fdf6e6;border:1px solid #ead9b0;padding:5pt 10pt;margin-bottom:8pt;border-radius:3pt}
+ .doc-panel{background:#fdf6e6!important;border:1px solid #ead9b0;padding:5pt 10pt;margin-bottom:8pt;border-radius:3pt}
  .doc-panel table{width:100%;border-collapse:collapse}
  .doc-panel td{font-size:8.5pt;color:#5d6a7a;padding:0}
  .doc-panel .p1{font-weight:bold;color:#a8801f;width:34%}
  .doc-panel .pn{width:33%}
- .doc-sec{background:#2e5d8a;color:#fff;font-size:7.5pt;font-weight:bold;letter-spacing:.05em;
+ .doc-sec{background:#2e5d8a;color:#fff;border:1px solid #24506f;font-size:7.5pt;font-weight:bold;letter-spacing:.05em;
    text-transform:uppercase;padding:4pt 9pt;margin-top:9pt;border-radius:3pt 3pt 0 0;
    display:table;width:100%;box-sizing:border-box}
  .doc-sec span{display:table-cell}
@@ -957,14 +1044,14 @@ const ESTILO_DOC = `
  table.d{width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:7pt;line-height:1.15}
  table.d thead{display:table-header-group}
  table.d tr{page-break-inside:avoid}
- table.d th{background:#2e5d8a;color:#fff;padding:3.5pt 3pt;font-size:7.5pt;font-weight:bold;
+ table.d th{background:#2e5d8a!important;color:#fff!important;padding:3.5pt 3pt;font-size:7.5pt;font-weight:bold;
    letter-spacing:.03em;text-transform:uppercase;border:1px solid #24506f;white-space:nowrap}
  table.d td{border:1px solid #dbe4ee;padding:2.4pt 3pt;text-align:center;white-space:nowrap}
  table.d td.nm{text-align:left;white-space:normal}
  table.d tr:nth-child(even) td{background:#f4f8fc}
- table.d tr.total td{background:#fdf6e6;font-weight:bold;color:#a8801f}
+ table.d tr.total td{background:#fdf6e6!important;font-weight:bold;color:#a8801f}
  table.d.lig th{background:#eef3f8;color:#2e5d8a;border:1px solid #cfdcea}
- .doc-final{background:#e8f1f9;border:1px solid #cfdcea;border-radius:4pt;padding:8pt 12pt;
+ .doc-final{background:#e8f1f9!important;border:1px solid #cfdcea;border-radius:4pt;padding:8pt 12pt;
    margin-top:9pt;display:table;width:100%;box-sizing:border-box}
  .doc-final span{display:table-cell;font-size:10pt;font-weight:bold;color:#2e5d8a;
    letter-spacing:.04em;text-transform:uppercase}
@@ -1202,6 +1289,27 @@ function bind(){
   Object.keys(ir).forEach(k=>{if($(k))$(k).addEventListener('click',()=>{VIEW=ir[k];render()})});
   if($('goIni'))$('goIni').addEventListener('click',()=>{VIEW='inicio';render()});
   if($('selCurso'))$('selCurso').addEventListener('change',e=>{DB.activo=e.target.value;save();render()});
+  const gr2=(VIEW==='cursos')?gruposExternos():[];
+  gr2.forEach((g,i)=>{const b=$('imp'+i);if(b)b.addEventListener('click',()=>{
+    if(!confirm('Agregar '+g.nombres.length+' estudiantes a '+curso().n+'?'))return;
+    const n=agregarNombres(g.nombres);
+    render(); toast(n?n+' estudiantes agregados':'Ya estaban todos');
+  })});
+  if($('addLista'))$('addLista').addEventListener('click',()=>{
+    const t=$('pegaLista').value.split(/\r?\n|;/).map(x=>x.replace(/^\s*\d+[).\-\s]+/,'')).filter(x=>x.trim());
+    if(!t.length){toast('Pega al menos un nombre');return}
+    const n=agregarNombres(t); render(); toast(n?n+' estudiantes agregados':'Ya estaban todos');
+  });
+  if($('copiarCurso'))$('copiarCurso').addEventListener('click',()=>{
+    const txt=curso().alumnos.map((a,i)=>(i+1)+'. '+a.n).join('\n');
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(()=>toast('Lista copiada')).catch(()=>toast('No se pudo copiar'));
+    }else{
+      const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);
+      ta.select();try{document.execCommand('copy');toast('Lista copiada')}catch(e){toast('No se pudo copiar')}
+      ta.remove();
+    }
+  });
   if($('addAlu')){$('addAlu').addEventListener('click',()=>{const n=$('nuevoAlu').value.trim();if(!n)return;curso().alumnos.push({id:uid(),n:n.toUpperCase()});save();render();toast('Estudiante agregado')})}
   document.querySelectorAll('[id^="verA"]').forEach(b=>b.addEventListener('click',()=>{DB.alumno=b.id.slice(4);save();VIEW='alumno';render()}));
   document.querySelectorAll('[id^="delA"]').forEach(b=>b.addEventListener('click',()=>{const aid=b.id.slice(4);const a=curso().alumnos.find(x=>x.id===aid);if(!a||!confirm('¿Eliminar a '+a.n+'?'))return;curso().alumnos=curso().alumnos.filter(x=>x.id!==aid);DB.tests.forEach(t=>{t.evals=t.evals.filter(e=>e.aid!==aid)});delete DB.adaptaciones[aid];save();render()}));
